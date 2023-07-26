@@ -52,7 +52,7 @@ namespace Cottage.API.Controllers
         // PUT: api/Items/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutItem(int id, string name, int status, string? comment, int category)
+        public async Task<IActionResult> PutItem([FromRoute] int id, string name, int status, int category, string? comment)
         {
             var item = await _context.Items.FindAsync(id);
 
@@ -90,14 +90,14 @@ namespace Cottage.API.Controllers
         // POST: api/Items
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Item>> PostItem(string name, int status, int categoryId)
+        public async Task<ActionResult<Item>> PostItem(string name, int status, int category, string? comment)
         {
           if (_context.Items == null)
           {
               return Problem("Entity set 'CottageContext.Items'  is null.");
           }
 
-            var newItem = new Item() { Name = name, Status = status, Category = categoryId };
+            var newItem = new Item() { Name = name, Status = status, Category = category, Comment = comment };
 
 
 			_context.Items.Add(newItem);

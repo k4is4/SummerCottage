@@ -1,0 +1,34 @@
+.edit-icon {
+	color: green;
+	cursor: pointer;
+}
+
+.delete-icon {
+	color: green;
+	cursor: pointer;
+}
+
+.status-text {
+	cursor: pointer;
+}
+
+.status-text-green {
+	color: green;
+	border: 1px solid green;
+	padding: 4px 8px; /* Adjust the padding to control the spacing */
+	border-radius: 8px; /* Adjust the border radius to get rounded corners */
+}
+
+.status-text-yellow {
+	color: yellow;
+	border: 1px solid yellow;
+	padding: 4px 8px; /* Adjust the padding to control the spacing */
+	border-radius: 8px; /* Adjust the border radius to get rounded corners */
+}
+
+.status-text-red {
+	color: red;
+	border: 1px solid red;
+	padding: 4px 8px; /* Adjust the padding to control the spacing */
+	border-radius: 8px; /* Adjust the border radius to get rounded corners */
+}

@@ -1,41 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import Item from "../types/item";
 import ModalProps from "../types/modalProps";
 import ItemWithoutId from "../types/itemWithoutId";
-import validateName from "../validators/validateName";
-import validateStatus from "../validators/validateStatus";
 import itemService from "../services/ItemService";
+import useValidation from "../hooks/useValidation";
+import { Category, Status } from "../types/enums";
 
 const AddModal: React.FC<ModalProps> = (props) => {
 	const [name, setName] = useState("");
-	const [status, setStatus] = useState("");
+	const [status, setStatus] = useState("4");
 	const [comment, setComment] = useState("");
-	const [category, setCategory] = useState("");
-	const [nameError, setNameError] = useState("");
-	const [statusError, setStatusError] = useState("");
-	const [formSubmitted, setFormSubmitted] = useState(false);
+	const [category, setCategory] = useState("4");
 
-	useEffect(() => {
-		setNameError(validateName(name));
-		setStatusError(validateStatus(status));
-	}, [name, status]);
+	const { nameError, commentError, formSubmitted, setFormSubmitted } =
+		useValidation(
+			name,
+			comment,
+			props.items.map((item) => item.name)
+		);
 
 	const handleSave = async () => {
 		setFormSubmitted(true);
-		if (nameError.length < 1 && statusError.length < 1) {
+		if (nameError.length < 1 && commentError.length < 1) {
 			const item: ItemWithoutId = {
 				name: name,
 				status: Number(status),
 				comment: comment,
-				category: category,
+				category: Number(category),
 			};
 			try {
 				const addedItem: Item = await itemService.addItem(item);
 				props.setItems([...props.items, addedItem]);
 				props.setShowModal(false);
 			} catch (error) {
-				console.error("Error updating item:", error);
+				console.error("Error adding item:", error);
 			}
 		}
 	};
@@ -61,36 +60,44 @@ const AddModal: React.FC<ModalProps> = (props) => {
 				</div>
 				<div className="form-group">
 					<label htmlFor="status">Jäljellä</label>
-					<input
-						type="number"
+					<select
 						id="status"
 						className="form-control"
 						value={status}
 						onChange={(e) => setStatus(e.target.value)}
-					/>
-					{statusError && formSubmitted && (
-						<span className="text-danger">{statusError}</span>
-					)}
+					>
+						<option value="1">{Status[1]}</option>
+						<option value="2">{Status[2]}</option>
+						<option value="3">{Status[3]}</option>
+						<option value="4">{Status[4]}</option>
+					</select>
 				</div>
 				<div className="form-group">
 					<label htmlFor="comment">Kommentti</label>
 					<input
-						type="number"
+						type="text"
 						id="comment"
 						className="form-control"
 						value={comment}
 						onChange={(e) => setComment(e.target.value)}
 					/>
+					{commentError && formSubmitted && (
+						<span className="text-danger">{commentError}</span>
+					)}
 				</div>
 				<div className="form-group">
 					<label htmlFor="category">Kategoria</label>
-					<input
-						type="number"
+					<select
 						id="category"
 						className="form-control"
 						value={category}
 						onChange={(e) => setCategory(e.target.value)}
-					/>
+					>
+						<option value="1">{Category[1]}</option>
+						<option value="2">{Category[2]}</option>
+						<option value="3">{Category[3]}</option>
+						<option value="4">{Category[4]}</option>
+					</select>
 				</div>
 			</Modal.Body>
 			<Modal.Footer>

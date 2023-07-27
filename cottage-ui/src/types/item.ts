@@ -1,9 +1,11 @@
+import { Category, Status } from "./enums";
+
 interface Item {
 	id: number;
 	name: string;
-	status: number | undefined;
+	status: Status;
 	comment: string | undefined;
-	category: number;
+	category: Category;
 }
 
 export default Item;

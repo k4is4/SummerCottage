@@ -8,27 +8,20 @@
 	cursor: pointer;
 }
 
-.status-text {
-	cursor: pointer;
+.table thead th div {
+	margin-bottom: 10px;
 }
 
-.status-text-green {
-	color: green;
-	border: 1px solid green;
-	padding: 4px 8px; /* Adjust the padding to control the spacing */
-	border-radius: 8px; /* Adjust the border radius to get rounded corners */
+.table thead th {
+	color: rgb(128, 126, 126);
 }
 
-.status-text-yellow {
-	color: yellow;
-	border: 1px solid yellow;
-	padding: 4px 8px; /* Adjust the padding to control the spacing */
-	border-radius: 8px; /* Adjust the border radius to get rounded corners */
+.comment-input {
+	border: none;
 }
 
-.status-text-red {
-	color: red;
-	border: 1px solid red;
-	padding: 4px 8px; /* Adjust the padding to control the spacing */
-	border-radius: 8px; /* Adjust the border radius to get rounded corners */
+@media screen and (max-width: 768px) {
+	.comment-input {
+		width: 100%;
+	}
 }

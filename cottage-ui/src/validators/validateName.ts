@@ -1,8 +1,11 @@
-const validateName = (name: string) => {
+const validateName = (name: string, existingNames: string[]) => {
+	const trimmedName = name.trim().toLowerCase();
 	if (name.trim() === "") {
-		return "Name is required";
-	} else if (name.length < 2 || name.length > 20) {
-		return "Name should be between 2 and 20 characters";
+		return "Nimi ei voi olla tyhjä";
+	} else if (name.length < 2 || name.length > 30) {
+		return "Nimen pitää olla vähintään 2-30 merkkiä";
+	} else if (existingNames.includes(trimmedName)) {
+		return "Nimi on jo listassa";
 	} else {
 		return "";
 	}

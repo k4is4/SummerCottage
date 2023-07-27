@@ -59,7 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Item.sql" />
-    <Build Include="Category.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Cottage.Db.refactorlog" />

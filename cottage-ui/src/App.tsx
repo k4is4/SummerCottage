@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import Banner from "./components/banner";
-import ItemList from "./components/itemList";
+import ItemList from "./components/inventory/itemList";
 import Navigation from "./components/navigation";
-import Calendar from "./components/calendar";
+import CalendarComponent from "./components/calendar/calendarComponent";
 
 const App: React.FC = () => {
 	return (
@@ -16,7 +16,7 @@ const App: React.FC = () => {
 					<Navigation />
 					<Routes>
 						<Route path="/" element={<ItemList />} />
-						<Route path="/request" element={<Calendar />} />
+						<Route path="/calendar" element={<CalendarComponent />} />
 					</Routes>
 				</div>
 			</Router>

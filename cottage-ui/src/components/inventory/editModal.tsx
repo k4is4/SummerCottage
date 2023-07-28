@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
-import Item from "../types/item";
-import ModalProps from "../types/modalProps";
-import itemService from "../services/ItemService";
-import useValidation from "../hooks/useValidation";
-import { Category, Status } from "../types/enums";
+import Item from "../../types/item";
+import ModalProps from "../../types/modalProps";
+import itemService from "../../services/ItemService";
+import useValidation from "../../hooks/useValidation";
+import { Category, Status } from "../../types/enums";
 
 const EditModal: React.FC<ModalProps> = (props) => {
 	const [editedName, setEditedName] = useState(props.selectedItem?.name ?? "");

@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
-import ModalProps from "../types/modalProps";
-import itemService from "../services/ItemService";
+import ModalProps from "../../types/modalProps";
+import itemService from "../../services/ItemService";
 
 const DeleteModal: React.FC<ModalProps> = (props) => {
 	const handleConfirmDelete = async () => {

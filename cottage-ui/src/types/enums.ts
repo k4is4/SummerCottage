@@ -11,3 +11,9 @@ export enum Category {
 	Juomat = 3,
 	Muut = 4,
 }
+
+export enum CalendarEventColor {
+	"white" = 1,
+	"orange" = 2,
+	"green" = 3,
+}

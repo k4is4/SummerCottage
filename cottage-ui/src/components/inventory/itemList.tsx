@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
-import Item from "../types/item";
+import Item from "../../types/item";
 import EditModal from "./editModal";
 import DeleteModal from "./deleteModal";
 import { Button } from "react-bootstrap";
 import AddModal from "./addModal";
 import "./itemList.css";
-import itemService from "../services/ItemService";
-import { Category, Status } from "../types/enums";
+import itemService from "../../services/ItemService";
+import { Category, Status } from "../../types/enums";
 
 const ItemList: React.FC = () => {
 	const [items, setItems] = useState<Item[]>([]);

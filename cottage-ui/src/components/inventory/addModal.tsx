@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
-import Item from "../types/item";
-import ModalProps from "../types/modalProps";
-import ItemWithoutId from "../types/itemWithoutId";
-import itemService from "../services/ItemService";
-import useValidation from "../hooks/useValidation";
-import { Category, Status } from "../types/enums";
+import Item from "../../types/item";
+import ModalProps from "../../types/modalProps";
+import ItemWithoutId from "../../types/itemWithoutId";
+import itemService from "../../services/ItemService";
+import useValidation from "../../hooks/useValidation";
+import { Category, Status } from "../../types/enums";
 
 const AddModal: React.FC<ModalProps> = (props) => {
 	const [name, setName] = useState("");

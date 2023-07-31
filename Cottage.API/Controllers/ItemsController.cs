@@ -65,6 +65,7 @@ namespace Cottage.API.Controllers
             item.Status = status;
             item.Comment = comment;
             item.Category = category;
+            item.UpdatedOn = DateTime.Now;
 
 			_context.Entry(item).State = EntityState.Modified;
 
@@ -97,7 +98,7 @@ namespace Cottage.API.Controllers
               return Problem("Entity set 'CottageContext.Items'  is null.");
           }
 
-            var newItem = new Item() { Name = name, Status = status, Category = category, Comment = comment };
+            var newItem = new Item() { Name = name, Status = status, Category = category, Comment = comment, UpdatedOn = DateTime.Now };
 
 
 			_context.Items.Add(newItem);

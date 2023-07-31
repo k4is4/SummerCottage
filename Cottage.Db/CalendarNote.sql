@@ -1,8 +1,0 @@
-﻿CREATE TABLE [dbo].[CalendarNote]
-(
-	[Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-	StartDate DATETIME NOT NULL,
-    EndDate DATETIME NOT NULL,
-    Note NVARCHAR(200) NOT NULL,
-    Color INT NOT NULL
-)

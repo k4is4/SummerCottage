@@ -14,8 +14,12 @@ interface AddModalProps {
 }
 
 const AddModal: React.FC<AddModalProps> = ({ slotInfo, onClose, onSave }) => {
-	const [startDate, setStartDate] = useState(slotInfo.start);
-	const [endDate, setEndDate] = useState(slotInfo.end);
+	const [startDate, setStartDate] = useState(
+		moment(slotInfo.start).startOf("day").add(12, "hours").toDate()
+	);
+	const [endDate, setEndDate] = useState(
+		moment(slotInfo.end).startOf("day").add(12, "hours").toDate()
+	);
 	const [note, setNote] = useState("");
 	const [color, setColor] = useState(CalendarEventColor.white);
 
@@ -25,6 +29,7 @@ const AddModal: React.FC<AddModalProps> = ({ slotInfo, onClose, onSave }) => {
 			endDate: endDate,
 			note: note,
 			color: color,
+			updatedOn: undefined,
 		};
 		const addedEvent: CalendarEvent =
 			await calendarEventService.addCalendarEvent(eventToAdd);
@@ -43,15 +48,23 @@ const AddModal: React.FC<AddModalProps> = ({ slotInfo, onClose, onSave }) => {
 					<Form.Control
 						type="date"
 						value={moment(startDate).format("YYYY-MM-DD")}
-						onChange={(e) => setStartDate(new Date(e.target.value))}
+						onChange={(e) =>
+							setStartDate(
+								moment(e.target.value).startOf("day").add(12, "hours").toDate()
+							)
+						}
 					/>
 				</Form.Group>
 				<Form.Group>
 					<Form.Label>Lähtöpäivä</Form.Label>
 					<Form.Control
 						type="date"
-						value={moment(endDate).format("YYYY-MM-DD")}
-						onChange={(e) => setEndDate(new Date(e.target.value))}
+						value={moment.utc(endDate).format("YYYY-MM-DD")}
+						onChange={(e) =>
+							setEndDate(
+								moment(e.target.value).startOf("day").add(12, "hours").toDate()
+							)
+						}
 					/>
 				</Form.Group>
 				<Form.Group>

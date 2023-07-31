@@ -7,7 +7,7 @@ import { ProblemDetails } from "../types/problemDetails";
 class CalendarEventService {
 	async getCalendarEvents(): Promise<CalendarEvent[]> {
 		return apiClient
-			.get<CalendarEvent[]>("/CalendarNotes")
+			.get<CalendarEvent[]>("/CalendarEvents")
 			.then((response: AxiosResponse<CalendarEvent[]>) => response.data);
 	}
 
@@ -15,20 +15,20 @@ class CalendarEventService {
 		event: CalendarEventWithoutId
 	): Promise<CalendarEvent> {
 		return apiClient
-			.post<CalendarEvent>("/CalendarNotes", event)
+			.post<CalendarEvent>("/CalendarEvents", event)
 			.then((response: AxiosResponse<CalendarEvent>) => response.data)
 			.catch(this.parseError<CalendarEvent>);
 	}
 
 	async updateCalendarEvent(event: CalendarEvent): Promise<CalendarEvent> {
 		return apiClient
-			.put<CalendarEvent>(`/CalendarNotes/${event.id}`, event)
+			.put<CalendarEvent>(`/CalendarEvents/${event.id}`, event)
 			.then((response: AxiosResponse<CalendarEvent>) => response.data)
 			.catch(this.parseError<CalendarEvent>);
 	}
 
 	async deleteCalendarEvent(id: number): Promise<void> {
-		return apiClient.delete(`/CalendarNotes/${id}`);
+		return apiClient.delete(`/CalendarEvents/${id}`);
 	}
 
 	parseError<T>(errorResponse: AxiosError<ProblemDetails>): Promise<T> {

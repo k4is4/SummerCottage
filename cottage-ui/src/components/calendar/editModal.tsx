@@ -18,14 +18,20 @@ const EditModal: React.FC<EditModalProps> = ({
 	onSave,
 	onDelete,
 }) => {
-	const [startDate, setStartDate] = useState(event.startDate);
-	const [endDate, setEndDate] = useState(event.endDate);
+	const [startDate, setStartDate] = useState(
+		moment(event.startDate).startOf("day").add(12, "hours").toDate()
+	);
+	const [endDate, setEndDate] = useState(
+		moment(event.endDate).startOf("day").add(12, "hours").toDate()
+	);
 	const [note, setNote] = useState(event.note);
 	const [color, setColor] = useState(event.color);
 
 	useEffect(() => {
-		setStartDate(event.startDate);
-		setEndDate(event.endDate);
+		setStartDate(
+			moment(event.startDate).startOf("day").add(12, "hours").toDate()
+		);
+		setEndDate(moment(event.endDate).startOf("day").add(12, "hours").toDate());
 		setNote(event.note);
 		setColor(event.color);
 	}, [event]);
@@ -37,6 +43,7 @@ const EditModal: React.FC<EditModalProps> = ({
 			endDate: endDate,
 			note: note,
 			color: color,
+			updatedOn: event.updatedOn,
 		};
 		const updatedEvent: CalendarEvent =
 			await calendarEventService.updateCalendarEvent(updateData);
@@ -60,7 +67,11 @@ const EditModal: React.FC<EditModalProps> = ({
 					<Form.Control
 						type="date"
 						value={moment(startDate).format("YYYY-MM-DD")}
-						onChange={(e) => setStartDate(new Date(e.target.value))}
+						onChange={(e) =>
+							setStartDate(
+								moment(e.target.value).startOf("day").add(12, "hours").toDate()
+							)
+						}
 					/>
 				</Form.Group>
 				<Form.Group>
@@ -68,7 +79,11 @@ const EditModal: React.FC<EditModalProps> = ({
 					<Form.Control
 						type="date"
 						value={moment(endDate).format("YYYY-MM-DD")}
-						onChange={(e) => setEndDate(new Date(e.target.value))}
+						onChange={(e) =>
+							setEndDate(
+								moment(e.target.value).startOf("day").add(12, "hours").toDate()
+							)
+						}
 					/>
 				</Form.Group>
 				<Form.Group>

@@ -6,6 +6,7 @@ interface Item {
 	status: Status;
 	comment: string | undefined;
 	category: Category;
+	updatedOn: string | undefined;
 }
 
 export default Item;

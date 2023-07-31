@@ -4,4 +4,5 @@ export default interface CalendarEvent {
 	startDate: Date;
 	endDate: Date;
 	color: number;
+	updatedOn: string;
 }

@@ -17,6 +17,7 @@ const CalendarComponent: React.FC = () => {
 		null
 	);
 	const [selectedSlot, setSelectedSlot] = useState<SlotInfo | null>(null);
+	const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
 	useEffect(() => {
 		fetchEvents();
@@ -27,6 +28,17 @@ const CalendarComponent: React.FC = () => {
 			const fetchedEvents: CalendarEvent[] =
 				await calendarEventService.getCalendarEvents();
 			setEvents(fetchedEvents);
+
+			let latestDate: Date | null = null;
+			fetchedEvents.forEach((p) => {
+				const updatedOn: Date | null = p.updatedOn
+					? new Date(p.updatedOn)
+					: null;
+				if (updatedOn && (!latestDate || updatedOn > latestDate)) {
+					latestDate = updatedOn;
+				}
+			});
+			setLastUpdated(latestDate);
 		} catch (error) {
 			console.error(error);
 		}
@@ -48,17 +60,20 @@ const CalendarComponent: React.FC = () => {
 			...updatedEvent,
 			startDate: new Date(updatedEvent.startDate),
 			endDate: new Date(updatedEvent.endDate),
+			updatedOn: new Date().toLocaleDateString(),
 		};
 		setEvents(
 			events.map((event) =>
 				event.id === oldEvent.id ? updatedEventWithJsDates : event
 			)
 		);
+		setLastUpdated(new Date());
 		setSelectedEvent(null);
 	};
 
 	const handleEventDelete = (eventToDelete: CalendarEvent) => {
 		setEvents(events.filter((event) => event.id !== eventToDelete.id));
+		setLastUpdated(new Date());
 		setSelectedEvent(null);
 	};
 
@@ -93,6 +108,7 @@ const CalendarComponent: React.FC = () => {
 					onClose={() => setSelectedSlot(null)}
 					onSave={(newEvent: CalendarEvent) => {
 						setEvents((prevEvents) => [...prevEvents, newEvent]);
+						setLastUpdated(new Date(newEvent.updatedOn));
 						setSelectedSlot(null);
 					}}
 				/>
@@ -105,6 +121,15 @@ const CalendarComponent: React.FC = () => {
 					onDelete={handleEventDelete}
 				/>
 			)}
+			<div className="container">
+				{/* Your Calendar component here */}
+				<p>
+					Muokattu:{" "}
+					{lastUpdated
+						? moment(lastUpdated).format("DD/MM/YYYY HH:mm")
+						: "Never"}
+				</p>
+			</div>
 		</div>
 	);
 };

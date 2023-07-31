@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[CalendarEvent]
+(
+	[Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[StartDate] DATETIME2 NOT NULL,
+    [EndDate] DATETIME2 NOT NULL,
+    [Note] NVARCHAR(200) NOT NULL,
+    [Color] INT NOT NULL,
+    [UpdatedOn] DATETIME2 NOT NULL
+)

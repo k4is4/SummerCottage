@@ -46,6 +46,7 @@ const EditModal: React.FC<ModalProps> = (props) => {
 			status: editedStatus,
 			comment: editedComment,
 			category: editedCategory,
+			updatedOn: props.selectedItem?.updatedOn,
 		};
 
 		await itemService.updateItem(updatedItem);

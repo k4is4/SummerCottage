@@ -59,6 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Item.sql" />
-    <Build Include="CalendarNote.sql" />
+    <Build Include="CalendarEvent.sql" />
   </ItemGroup>
 </Project>

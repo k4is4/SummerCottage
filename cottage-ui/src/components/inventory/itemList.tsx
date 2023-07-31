@@ -102,6 +102,7 @@ const ItemList: React.FC = () => {
 							Jäljellä
 						</th>
 						<th scope="col">Kommentti</th>
+						<th scope="col">Muokattu</th>
 						<th scope="col">
 							<div>
 								<label htmlFor="categoryFilter"></label>
@@ -180,6 +181,9 @@ const ItemList: React.FC = () => {
 											onKeyDown={(e) => handleKeyDown(item.id, e)}
 											className="comment-input"
 										/>
+									</td>
+									<td>
+										{new Date(item.updatedOn ?? "").toLocaleDateString("fi-FI")}
 									</td>
 									<td>{Category[item.category]}</td>
 									<td>

@@ -14,4 +14,6 @@ public partial class Item
     public string? Comment { get; set; }
 
     public int Category { get; set; }
+
+	public DateTime UpdatedOn { get; set; }
 }

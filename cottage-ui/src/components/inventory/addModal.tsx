@@ -28,6 +28,7 @@ const AddModal: React.FC<ModalProps> = (props) => {
 				status: Number(status),
 				comment: comment,
 				category: Number(category),
+				updatedOn: undefined,
 			};
 			try {
 				const addedItem: Item = await itemService.addItem(item);

@@ -4,5 +4,6 @@
     [Name] NVARCHAR(30) NOT NULL, 
     [Status] INT NOT NULL, 
     [Comment] NVARCHAR(100) NULL, 
-    [Category] INT NOT NULL
+    [Category] INT NOT NULL,
+    [UpdatedOn] DATETIME2 NOT NULL
 )

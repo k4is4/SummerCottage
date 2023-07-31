@@ -3,4 +3,5 @@ export default interface CalendarEventWithoutId {
 	startDate: Date;
 	endDate: Date;
 	color: number;
+	updatedOn: string | undefined;
 }

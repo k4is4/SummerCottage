@@ -1,6 +1,6 @@
 ﻿namespace Cottage.API.Models;
 
-public partial class CalendarNote
+public partial class CalendarEvent
 {
     public int Id { get; set; }
 
@@ -11,4 +11,6 @@ public partial class CalendarNote
     public string Note { get; set; } = null!;
 
     public int Color { get; set; }
+
+	public DateTime UpdatedOn { get; set; }
 }

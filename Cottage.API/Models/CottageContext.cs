@@ -13,17 +13,17 @@ public partial class CottageContext : DbContext
     {
     }
 
-    public virtual DbSet<CalendarNote> CalendarNotes { get; set; }
+    public virtual DbSet<CalendarEvent> CalendarEvents { get; set; }
 
     public virtual DbSet<Item> Items { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<CalendarNote>(entity =>
+        modelBuilder.Entity<CalendarEvent>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Calendar__3214EC07A3ADB369");
 
-            entity.ToTable("CalendarNote");
+            entity.ToTable("CalendarEvent");
 
             entity.Property(e => e.EndDate).HasColumnType("datetime");
             entity.Property(e => e.Note).HasMaxLength(200);

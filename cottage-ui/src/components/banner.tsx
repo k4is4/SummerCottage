@@ -1,10 +1,11 @@
 import React from "react";
 import "./banner.css";
+import logo from "../pictures/logo.jpg";
 
 const Banner: React.FC = () => {
 	return (
 		<div className="p-3 text-center">
-			<h1 className="logo">Mökki</h1>
+			<img src={logo} alt="CottageLogo" />
 		</div>
 	);
 };

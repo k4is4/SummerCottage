@@ -104,8 +104,12 @@ const EditModal: React.FC<EditModalProps> = ({
 						}
 					>
 						<option value={CalendarEventColor.white}>Tyhjä</option>
-						<option value={CalendarEventColor.orange}>Oranssi</option>
-						<option value={CalendarEventColor.green}>Vihreä</option>
+						<option value={CalendarEventColor["#BB0C0C"]}>
+							Punainen - Varattu
+						</option>
+						<option value={CalendarEventColor.green}>
+							Vihreä - Saa tulla mukaan
+						</option>
 					</Form.Control>
 				</Form.Group>
 			</Modal.Body>

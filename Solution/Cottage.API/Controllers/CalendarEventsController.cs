@@ -47,7 +47,7 @@ namespace Cottage.API.Controllers
 				return BadRequest();
 			}
 
-			calendarEvent.UpdatedOn = DateTime.Now;
+			calendarEvent.UpdatedOn = DateTime.UtcNow;
 
 			_context.Entry(calendarEvent).State = EntityState.Modified;
 
@@ -73,7 +73,7 @@ namespace Cottage.API.Controllers
 		[HttpPost]
 		public async Task<ActionResult<CalendarEvent>> PostCalendarEvent([FromBody] CalendarEvent calendarEvent)
 		{
-			calendarEvent.UpdatedOn = DateTime.Now;
+			calendarEvent.UpdatedOn = DateTime.UtcNow;
 			_context.CalendarEvents.Add(calendarEvent);
 			await _context.SaveChangesAsync();
 

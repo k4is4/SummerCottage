@@ -56,9 +56,11 @@ const ItemList: React.FC = () => {
 		}
 	};
 
-	const handleCommentChange = (itemId: number, comment: string) => {
-		const updatedItems = items.map((item) =>
-			item.id === itemId ? { ...item, comment } : item
+	const handleCommentChange = async (item: Item, comment: string) => {
+		const updatedItem = { ...item, comment: comment };
+		await itemService.updateItem(updatedItem);
+		const updatedItems = items.map((i) =>
+			i.id === item.id ? { ...i, comment } : i
 		);
 		setItems(updatedItems);
 	};
@@ -176,7 +178,7 @@ const ItemList: React.FC = () => {
 											type="text"
 											value={item.comment || ""}
 											onChange={(e) =>
-												handleCommentChange(item.id, e.target.value)
+												handleCommentChange(item, e.target.value)
 											}
 											onKeyDown={(e) => handleKeyDown(item.id, e)}
 											className="comment-input"

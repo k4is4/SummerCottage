@@ -22,7 +22,9 @@ const EditModal: React.FC<ModalProps> = (props) => {
 		useValidation(
 			editedName,
 			editedComment,
-			props.items.map((item) => item.name)
+			props.items
+				.filter((item) => item.id !== props.selectedItem?.id)
+				.map((item) => item.name)
 		);
 
 	const handleSave = async () => {

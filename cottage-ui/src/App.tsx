@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import Banner from "./components/banner";
@@ -11,15 +11,13 @@ const App: React.FC = () => {
 	return (
 		<>
 			<Banner></Banner>
-			<Router>
-				<div>
-					<Navigation />
-					<Routes>
-						<Route path="/" element={<ItemList />} />
-						<Route path="/calendar" element={<CalendarComponent />} />
-					</Routes>
-				</div>
-			</Router>
+			<div>
+				<Navigation />
+				<Routes>
+					<Route path="/" element={<ItemList />} />
+					<Route path="/calendar" element={<CalendarComponent />} />
+				</Routes>
+			</div>
 		</>
 	);
 };

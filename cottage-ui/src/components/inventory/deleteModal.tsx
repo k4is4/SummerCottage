@@ -9,8 +9,9 @@ const DeleteModal: React.FC<ModalProps> = (props) => {
 			try {
 				deleteItem(props.selectedItem.id);
 				props.setShowModal(false);
-			} catch (error) {
-				console.error("Error deleting product:", error);
+			} catch (e) {
+				console.error("Error deleting item:", e);
+				props.setError("Poistaminen ei onnistunut");
 			}
 		}
 	};

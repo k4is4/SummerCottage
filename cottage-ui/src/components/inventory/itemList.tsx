@@ -10,6 +10,7 @@ import { Spinner } from "react-bootstrap";
 import StatusFilter from "./statusFilter";
 import CategoryFilter from "./categoryFilter";
 import ItemRow from "./itemRow";
+import ErrorModal from "../errorModal";
 
 const ItemList: React.FC = () => {
 	const [items, setItems] = useState<Item[]>([]);
@@ -20,6 +21,7 @@ const ItemList: React.FC = () => {
 	const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 	const [selectedStatus, setSelectedStatus] = useState<number | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 	const sortedItems = [...items].sort((a, b) => a.name.localeCompare(b.name));
 
 	useEffect(() => {
@@ -31,8 +33,9 @@ const ItemList: React.FC = () => {
 		try {
 			const itemsFromApi = await itemService.getItems();
 			setItems(itemsFromApi);
-		} catch (error) {
-			console.error("Error fetching items:", error);
+		} catch (e) {
+			console.error("Error fetching items:", e);
+			setError("Inventaarion haku ei onnistunut");
 		} finally {
 			setIsLoading(false);
 		}
@@ -60,16 +63,22 @@ const ItemList: React.FC = () => {
 			setItems(updatedItems);
 		} catch (error) {
 			console.error("Error updating status:", error);
+			setError("Statuksen päivitys ei onnistunut");
 		}
 	};
 
 	const handleCommentChange = async (item: Item, comment: string) => {
-		const updatedItem: Item = { ...item, comment: comment };
-		await itemService.updateItem(updatedItem);
-		const updatedItems: Item[] = items.map((i) =>
-			i.id === item.id ? { ...i, comment } : i
-		);
-		setItems(updatedItems);
+		try {
+			const updatedItem: Item = { ...item, comment: comment };
+			await itemService.updateItem(updatedItem);
+			const updatedItems: Item[] = items.map((i) =>
+				i.id === item.id ? { ...i, comment } : i
+			);
+			setItems(updatedItems);
+		} catch (error) {
+			console.error("Error updating status:", error);
+			setError("Kommentin päivitys ei onnistunut");
+		}
 	};
 
 	const handleKeyDown = (
@@ -132,6 +141,7 @@ const ItemList: React.FC = () => {
 						) {
 							return (
 								<ItemRow
+									key={item.id}
 									item={item}
 									handleStatusUpdate={handleStatusUpdate}
 									handleCommentChange={handleCommentChange}
@@ -146,12 +156,16 @@ const ItemList: React.FC = () => {
 				</tbody>
 			</table>
 			<div>
+				{error && (
+					<ErrorModal initialMessage={error} onClose={() => setError(null)} />
+				)}
 				{showAddModal && (
 					<AddModal
 						selectedItem={null}
 						items={items}
 						setItems={setItems}
 						setShowModal={setShowAddModal}
+						setError={setError}
 					></AddModal>
 				)}
 				{showEditModal && (
@@ -160,6 +174,7 @@ const ItemList: React.FC = () => {
 						items={items}
 						setItems={setItems}
 						setShowModal={setShowEditModal}
+						setError={setError}
 					></EditModal>
 				)}
 				{showDeleteModal && (
@@ -168,6 +183,7 @@ const ItemList: React.FC = () => {
 						items={items}
 						setItems={setItems}
 						setShowModal={setShowDeleteModal}
+						setError={setError}
 					></DeleteModal>
 				)}
 			</div>

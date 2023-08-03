@@ -10,6 +10,7 @@ interface EditModalProps {
 	onClose: () => void;
 	onSave: (oldEvent: CalendarEvent, newEvent: CalendarEvent) => void;
 	onDelete: (event: CalendarEvent) => void;
+	setError: (error: string) => void;
 }
 
 const EditModal: React.FC<EditModalProps> = ({
@@ -17,6 +18,7 @@ const EditModal: React.FC<EditModalProps> = ({
 	onClose,
 	onSave,
 	onDelete,
+	setError,
 }) => {
 	const [startDate, setStartDate] = useState(
 		moment(event.startDate).startOf("day").add(12, "hours").toDate()
@@ -37,23 +39,33 @@ const EditModal: React.FC<EditModalProps> = ({
 	}, [event]);
 
 	const handleSave = async () => {
-		const updateData: CalendarEvent = {
-			id: event.id,
-			startDate: startDate,
-			endDate: endDate,
-			note: note,
-			color: color,
-			updatedOn: event.updatedOn,
-		};
-		const updatedEvent: CalendarEvent =
-			await calendarEventService.updateCalendarEvent(updateData);
+		try {
+			const updateData: CalendarEvent = {
+				id: event.id,
+				startDate: startDate,
+				endDate: endDate,
+				note: note,
+				color: color,
+				updatedOn: event.updatedOn,
+			};
+			const updatedEvent: CalendarEvent =
+				await calendarEventService.updateCalendarEvent(updateData);
 
-		onSave(event, updatedEvent);
+			onSave(event, updatedEvent);
+		} catch (e) {
+			console.error("Error updating event:", e);
+			setError("Muokkaus ei onnistunut");
+		}
 	};
 
 	const handleDelete = async () => {
-		await calendarEventService.deleteCalendarEvent(event.id);
-		onDelete(event);
+		try {
+			await calendarEventService.deleteCalendarEvent(event.id);
+			onDelete(event);
+		} catch (e) {
+			console.error("Error deleting event:", e);
+			setError("Poisto ei onnistunut");
+		}
 	};
 
 	return (

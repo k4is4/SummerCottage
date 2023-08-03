@@ -10,6 +10,7 @@ import calendarEventService from "../../services/CalendarEventService";
 import "moment/locale/fi";
 import customToolbar from "./customToolbar";
 import { Spinner } from "react-bootstrap";
+import ErrorModal from "../errorModal";
 
 const localizer = momentLocalizer(moment);
 
@@ -21,6 +22,7 @@ const CalendarComponent: React.FC = () => {
 	const [selectedSlot, setSelectedSlot] = useState<SlotInfo | null>(null);
 	const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		fetchEvents();
@@ -117,6 +119,9 @@ const CalendarComponent: React.FC = () => {
 				onSelectEvent={handleEventSelection}
 				components={{ toolbar: customToolbar }}
 			/>
+			{error && (
+				<ErrorModal initialMessage={error} onClose={() => setError(null)} />
+			)}
 			{selectedSlot && (
 				<AddModal
 					slotInfo={selectedSlot}
@@ -126,6 +131,7 @@ const CalendarComponent: React.FC = () => {
 						setLastUpdated(new Date(newEvent.updatedOn));
 						setSelectedSlot(null);
 					}}
+					setError={setError}
 				/>
 			)}
 			{selectedEvent && (
@@ -134,10 +140,10 @@ const CalendarComponent: React.FC = () => {
 					onClose={() => setSelectedEvent(null)}
 					onSave={handleEventUpdate}
 					onDelete={handleEventDelete}
+					setError={setError}
 				/>
 			)}
 			<div className="container">
-				{/* Your Calendar component here */}
 				<p>
 					Muokattu:{" "}
 					{lastUpdated

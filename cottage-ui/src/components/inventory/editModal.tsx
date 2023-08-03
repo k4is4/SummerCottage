@@ -34,8 +34,9 @@ const EditModal: React.FC<ModalProps> = (props) => {
 				try {
 					editItem(props.selectedItem.id);
 					props.setShowModal(false);
-				} catch (error) {
-					console.error("Error updating item:", error);
+				} catch (e) {
+					console.error("Error updating item:", e);
+					props.setError("Muokkaus ei onnistunut");
 				}
 			}
 		}

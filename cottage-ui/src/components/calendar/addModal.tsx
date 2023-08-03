@@ -11,9 +11,15 @@ interface AddModalProps {
 	slotInfo: SlotInfo;
 	onClose: () => void;
 	onSave: (newEvent: CalendarEvent) => void;
+	setError: (error: string) => void;
 }
 
-const AddModal: React.FC<AddModalProps> = ({ slotInfo, onClose, onSave }) => {
+const AddModal: React.FC<AddModalProps> = ({
+	slotInfo,
+	onClose,
+	onSave,
+	setError,
+}) => {
 	const [startDate, setStartDate] = useState(
 		moment(slotInfo.start).startOf("day").add(12, "hours").toDate()
 	);
@@ -31,10 +37,14 @@ const AddModal: React.FC<AddModalProps> = ({ slotInfo, onClose, onSave }) => {
 			color: color,
 			updatedOn: undefined,
 		};
-		const addedEvent: CalendarEvent =
-			await calendarEventService.addCalendarEvent(eventToAdd);
-
-		onSave(addedEvent);
+		try {
+			const addedEvent: CalendarEvent =
+				await calendarEventService.addCalendarEvent(eventToAdd);
+			onSave(addedEvent);
+		} catch (e) {
+			console.error("Error adding event:", e);
+			setError("Lisäys ei onnistunut");
+		}
 	};
 
 	return (

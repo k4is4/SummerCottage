@@ -34,8 +34,9 @@ const AddModal: React.FC<ModalProps> = (props) => {
 				const addedItem: Item = await itemService.addItem(item);
 				props.setItems([...props.items, addedItem]);
 				props.setShowModal(false);
-			} catch (error) {
-				console.error("Error adding item:", error);
+			} catch (e) {
+				console.error("Error adding item:", e);
+				props.setError("Lisäys ei onnistunut");
 			}
 		}
 	};

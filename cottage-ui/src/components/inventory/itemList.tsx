@@ -8,6 +8,7 @@ import AddModal from "./addModal";
 import "./itemList.css";
 import itemService from "../../services/ItemService";
 import { Category, Status } from "../../types/enums";
+import { Spinner } from "react-bootstrap";
 
 const ItemList: React.FC = () => {
 	const [items, setItems] = useState<Item[]>([]);
@@ -18,17 +19,21 @@ const ItemList: React.FC = () => {
 	const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 	const [selectedStatus, setSelectedStatus] = useState<number | null>(null);
 	const sortedItems = [...items].sort((a, b) => a.name.localeCompare(b.name));
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		fetchData();
 	}, []);
 
 	const fetchData = async () => {
+		setIsLoading(true);
 		try {
 			const itemsFromApi = await itemService.getItems();
 			setItems(itemsFromApi);
 		} catch (error) {
 			console.error("Error fetching items:", error);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -73,6 +78,14 @@ const ItemList: React.FC = () => {
 			e.currentTarget.blur();
 		}
 	};
+
+	if (isLoading) {
+		return (
+			<div className="container d-flex justify-content-center align-items-center">
+				<Spinner animation="border" variant="primary" className="spinner" />{" "}
+			</div>
+		);
+	}
 
 	return (
 		<div className="container">

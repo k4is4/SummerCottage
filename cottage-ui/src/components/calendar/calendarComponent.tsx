@@ -9,6 +9,7 @@ import CalendarEvent from "../../types/calendarEvent";
 import calendarEventService from "../../services/CalendarEventService";
 import "moment/locale/fi";
 import customToolbar from "./customToolbar";
+import { Spinner } from "react-bootstrap";
 
 const localizer = momentLocalizer(moment);
 
@@ -19,12 +20,14 @@ const CalendarComponent: React.FC = () => {
 	);
 	const [selectedSlot, setSelectedSlot] = useState<SlotInfo | null>(null);
 	const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		fetchEvents();
 	}, []);
 
 	const fetchEvents = async () => {
+		setIsLoading(true);
 		try {
 			const fetchedEvents: CalendarEvent[] =
 				await calendarEventService.getCalendarEvents();
@@ -42,6 +45,8 @@ const CalendarComponent: React.FC = () => {
 			setLastUpdated(latestDate);
 		} catch (error) {
 			console.error(error);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -77,6 +82,14 @@ const CalendarComponent: React.FC = () => {
 		setLastUpdated(new Date());
 		setSelectedEvent(null);
 	};
+
+	if (isLoading) {
+		return (
+			<div className="container d-flex justify-content-center align-items-center">
+				<Spinner animation="border" variant="primary" />{" "}
+			</div>
+		);
+	}
 
 	return (
 		<div className="container">

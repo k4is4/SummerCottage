@@ -10,6 +10,7 @@
 
 # production
 /build
+/cottage-ui/build
 
 # misc
 .DS_Store

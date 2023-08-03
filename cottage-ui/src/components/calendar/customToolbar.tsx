@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import "./customToolbar.css";
+import { ToolbarProps } from "react-big-calendar";
 
-function RBCToolbar(props: any) {
-	const { date, onNavigate } = props;
+const CustomToolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
+	const date = props.date;
+	const onNavigate = props.onNavigate;
 	const [month, setMonth] = useState("tammikuu");
 	const mMonth = moment(date).format("MMMM");
 
@@ -29,6 +31,6 @@ function RBCToolbar(props: any) {
 			</div>
 		</div>
 	);
-}
+};
 
-export default RBCToolbar;
+export default CustomToolbar;

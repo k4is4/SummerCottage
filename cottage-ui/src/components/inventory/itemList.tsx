@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import Item from "../../types/item";
 import EditModal from "./editModal";
 import DeleteModal from "./deleteModal";
@@ -7,8 +6,10 @@ import { Button } from "react-bootstrap";
 import AddModal from "./addModal";
 import "./itemList.css";
 import itemService from "../../services/ItemService";
-import { Category, Status } from "../../types/enums";
 import { Spinner } from "react-bootstrap";
+import StatusFilter from "./statusFilter";
+import CategoryFilter from "./categoryFilter";
+import ItemRow from "./itemRow";
 
 const ItemList: React.FC = () => {
 	const [items, setItems] = useState<Item[]>([]);
@@ -18,8 +19,8 @@ const ItemList: React.FC = () => {
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 	const [selectedStatus, setSelectedStatus] = useState<number | null>(null);
-	const sortedItems = [...items].sort((a, b) => a.name.localeCompare(b.name));
 	const [isLoading, setIsLoading] = useState(false);
+	const sortedItems = [...items].sort((a, b) => a.name.localeCompare(b.name));
 
 	useEffect(() => {
 		fetchData();
@@ -49,10 +50,11 @@ const ItemList: React.FC = () => {
 
 	const handleStatusUpdate = async (item: Item) => {
 		try {
-			const nextStatus = (item.status % 4) + 1;
-			const updatedItem = { ...item, status: nextStatus };
+			const numberOfStatuses: number = 4;
+			const nextStatus: number = (item.status % numberOfStatuses) + 1;
+			const updatedItem: Item = { ...item, status: nextStatus };
 			await itemService.updateItem(updatedItem);
-			const updatedItems = items.map((it) =>
+			const updatedItems: Item[] = items.map((it) =>
 				it.id === item.id ? updatedItem : it
 			);
 			setItems(updatedItems);
@@ -62,9 +64,9 @@ const ItemList: React.FC = () => {
 	};
 
 	const handleCommentChange = async (item: Item, comment: string) => {
-		const updatedItem = { ...item, comment: comment };
+		const updatedItem: Item = { ...item, comment: comment };
 		await itemService.updateItem(updatedItem);
-		const updatedItems = items.map((i) =>
+		const updatedItems: Item[] = items.map((i) =>
 			i.id === item.id ? { ...i, comment } : i
 		);
 		setItems(updatedItems);
@@ -94,57 +96,19 @@ const ItemList: React.FC = () => {
 					<tr>
 						<th scope="col">Nimi</th>
 						<th scope="col">
-							<div>
-								<label htmlFor="statusFilter"></label>
-								<select
-									id="statusFilter"
-									value={selectedStatus || ""}
-									onChange={(e) =>
-										setSelectedStatus(
-											e.target.value ? parseInt(e.target.value, 10) : null
-										)
-									}
-								>
-									<option value="">Kaikki</option>
-									<option value={Status.Paljon}>{Status[Status.Paljon]}</option>
-									<option value={Status.Löytyy}>{Status[Status.Löytyy]}</option>
-									<option value={Status.Lopussa}>
-										{Status[Status.Lopussa]}
-									</option>
-									<option value={Status["?"]}>{Status[Status["?"]]}</option>
-								</select>
-							</div>
+							<StatusFilter
+								selectedStatus={selectedStatus}
+								setSelectedStatus={setSelectedStatus}
+							/>
 							Jäljellä
 						</th>
 						<th scope="col">Kommentti</th>
 						<th scope="col">Muokattu</th>
 						<th scope="col">
-							<div>
-								<label htmlFor="categoryFilter"></label>
-								<select
-									id="categoryFilter"
-									value={selectedCategory || ""}
-									onChange={(e) =>
-										setSelectedCategory(
-											e.target.value ? parseInt(e.target.value, 10) : null
-										)
-									}
-								>
-									<option value="">Kaikki</option>
-									<option value={Category.Kuivaruoka}>
-										{Category[Category.Kuivaruoka]}
-									</option>
-									<option value={Category.Jääkaappi}>
-										{Category[Category.Jääkaappi]}
-									</option>
-									<option value={Category.Juomat}>
-										{Category[Category.Juomat]}
-									</option>
-									<option value={Category.Muut}>
-										{Category[Category.Muut]}
-									</option>
-								</select>
-							</div>
+							<CategoryFilter
+								selectedCategory={selectedCategory}
+								setSelectedCategory={setSelectedCategory}
+							/>
 							Kategoria
 						</th>
 						<th scope="col"></th>
@@ -167,67 +131,14 @@ const ItemList: React.FC = () => {
 							(selectedStatus === null || item.status === selectedStatus)
 						) {
 							return (
-								<tr key={item.id} tabIndex={0}>
-									<td>{item.name}</td>
-									<td>
-										<Button
-											onClick={() => handleStatusUpdate(item)}
-											variant={`${
-												item.status === 1
-													? "primary"
-													: item.status === 2
-													? "warning"
-													: item.status === 3
-													? "danger"
-													: ""
-											}`}
-											className="btn-sm"
-										>
-											{Status[item.status]}
-										</Button>
-									</td>
-									<td>
-										<input
-											type="text"
-											value={item.comment || ""}
-											onChange={(e) =>
-												handleCommentChange(item, e.target.value)
-											}
-											onKeyDown={(e) => handleKeyDown(item.id, e)}
-											className="comment-input"
-										/>
-									</td>
-									<td>
-										{new Date(item.updatedOn ?? "").toLocaleDateString("fi-FI")}
-									</td>
-									<td>{Category[item.category]}</td>
-									<td>
-										<AiOutlineEdit
-											tabIndex={0}
-											className="edit-icon"
-											onClick={() => handleEdit(item)}
-											onKeyDown={(e) => {
-												if (e.key === "Enter") {
-													handleEdit(item);
-												}
-											}}
-											aria-label={`Muokkaa ${item.name}`}
-										/>
-									</td>
-									<td>
-										<AiOutlineDelete
-											tabIndex={0}
-											className="delete-icon"
-											onClick={() => handleDelete(item)}
-											onKeyDown={(e) => {
-												if (e.key === "Enter") {
-													handleDelete(item);
-												}
-											}}
-											aria-label={`Poista ${item.name}`}
-										/>
-									</td>
-								</tr>
+								<ItemRow
+									item={item}
+									handleStatusUpdate={handleStatusUpdate}
+									handleCommentChange={handleCommentChange}
+									handleKeyDown={handleKeyDown}
+									handleEdit={handleEdit}
+									handleDelete={handleDelete}
+								/>
 							);
 						}
 						return null;

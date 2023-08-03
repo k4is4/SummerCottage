@@ -8,6 +8,7 @@ import EditModal from "./editModal";
 import CalendarEvent from "../../types/calendarEvent";
 import calendarEventService from "../../services/CalendarEventService";
 import "moment/locale/fi";
+import customToolbar from "./customToolbar";
 
 const localizer = momentLocalizer(moment);
 
@@ -101,6 +102,7 @@ const CalendarComponent: React.FC = () => {
 				selectable={true}
 				onSelectSlot={handleSlotSelection}
 				onSelectEvent={handleEventSelection}
+				components={{ toolbar: customToolbar }}
 			/>
 			{selectedSlot && (
 				<AddModal

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import { Button } from "react-bootstrap";
 import Item from "../../types/item";
@@ -8,10 +8,6 @@ interface ItemRowProps {
 	item: Item;
 	handleStatusUpdate: (item: Item) => void;
 	handleCommentChange: (item: Item, comment: string) => void;
-	handleKeyDown: (
-		itemId: number,
-		e: React.KeyboardEvent<HTMLInputElement>
-	) => void;
 	handleEdit: (item: Item) => void;
 	handleDelete: (item: Item) => void;
 }
@@ -20,10 +16,23 @@ const ItemRow: React.FC<ItemRowProps> = ({
 	item,
 	handleStatusUpdate,
 	handleCommentChange,
-	handleKeyDown,
 	handleEdit,
 	handleDelete,
 }) => {
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.value = item.comment || "";
+		}
+	}, [item.comment]);
+
+	const saveComment = () => {
+		if (inputRef.current) {
+			handleCommentChange(item, inputRef.current.value);
+		}
+	};
+
 	return (
 		<tr key={item.id} tabIndex={0}>
 			<td>{item.name}</td>
@@ -47,9 +56,15 @@ const ItemRow: React.FC<ItemRowProps> = ({
 			<td>
 				<input
 					type="text"
-					value={item.comment || ""}
-					onChange={(e) => handleCommentChange(item, e.target.value)}
-					onKeyDown={(e) => handleKeyDown(item.id, e)}
+					defaultValue={item.comment || ""}
+					ref={inputRef}
+					onBlur={saveComment}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") {
+							e.currentTarget.blur();
+							saveComment();
+						}
+					}}
 					className="comment-input"
 				/>
 			</td>

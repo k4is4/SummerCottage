@@ -61,8 +61,8 @@ const ItemList: React.FC = () => {
 				it.id === item.id ? updatedItem : it
 			);
 			setItems(updatedItems);
-		} catch (error) {
-			console.error("Error updating status:", error);
+		} catch (e) {
+			console.error("Error updating status:", e);
 			setError("Statuksen päivitys ei onnistunut");
 		}
 	};
@@ -78,15 +78,6 @@ const ItemList: React.FC = () => {
 		} catch (error) {
 			console.error("Error updating status:", error);
 			setError("Kommentin päivitys ei onnistunut");
-		}
-	};
-
-	const handleKeyDown = (
-		itemId: number,
-		e: React.KeyboardEvent<HTMLInputElement>
-	) => {
-		if (e.key === "Enter") {
-			e.currentTarget.blur();
 		}
 	};
 
@@ -141,7 +132,6 @@ const ItemList: React.FC = () => {
 									item={item}
 									handleStatusUpdate={handleStatusUpdate}
 									handleCommentChange={handleCommentChange}
-									handleKeyDown={handleKeyDown}
 									handleEdit={handleEdit}
 									handleDelete={handleDelete}
 								/>

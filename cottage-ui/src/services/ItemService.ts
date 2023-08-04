@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 import Item from "../types/item";
 import apiClient from "./apiClient";
-import ItemWithoutId from "../types/itemFormData";
+import ItemFormData from "../types/itemFormData";
 import { ProblemDetails } from "../types/problemDetails";
 
 class ItemService {
@@ -11,30 +11,16 @@ class ItemService {
 			.then((response: AxiosResponse<Item[]>) => response.data);
 	}
 
-	async addItem(item: ItemWithoutId): Promise<Item> {
+	async addItem(item: ItemFormData): Promise<Item> {
 		return apiClient
-			.post<Item>("/items", null, {
-				params: {
-					name: item.name,
-					status: item.status,
-					category: item.category,
-					comment: item.comment,
-				},
-			})
+			.post<Item>("/items", item)
 			.then((response: AxiosResponse<Item>) => response.data)
 			.catch(this.parseError<Item>);
 	}
 
 	async updateItem(item: Item): Promise<Item> {
 		return apiClient
-			.put<Item>(`/items/${item.id}`, null, {
-				params: {
-					name: item.name,
-					status: item.status,
-					category: item.category,
-					comment: item.comment,
-				},
-			})
+			.put<Item>(`/items/${item.id}`, item)
 			.then((response: AxiosResponse<Item>) => response.data)
 			.catch(this.parseError<Item>);
 	}

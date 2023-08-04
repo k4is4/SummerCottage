@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 import CalendarEvent from "../types/calendarEvent";
 import apiClient from "./apiClient";
-import CalendarEventWithoutId from "../types/eventFormData";
+import EventFormData from "../types/eventFormData";
 import { ProblemDetails } from "../types/problemDetails";
 
 class CalendarEventService {
@@ -11,9 +11,7 @@ class CalendarEventService {
 			.then((response: AxiosResponse<CalendarEvent[]>) => response.data);
 	}
 
-	async addCalendarEvent(
-		event: CalendarEventWithoutId
-	): Promise<CalendarEvent> {
+	async addCalendarEvent(event: EventFormData): Promise<CalendarEvent> {
 		return apiClient
 			.post<CalendarEvent>("/CalendarEvents", event)
 			.then((response: AxiosResponse<CalendarEvent>) => response.data)

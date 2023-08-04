@@ -111,10 +111,10 @@ const AddModal: React.FC<AddModalProps> = ({
 				</Form.Group>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button variant="secondary" onClick={onClose}>
+				<Button variant="secondary" onClick={onClose} aria-label="Cancel">
 					Peruuta
 				</Button>
-				<Button variant="primary" onClick={handleSave}>
+				<Button variant="primary" onClick={handleSave} aria-label="Save">
 					Tallenna
 				</Button>
 			</Modal.Footer>

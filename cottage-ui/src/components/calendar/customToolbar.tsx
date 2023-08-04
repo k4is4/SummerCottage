@@ -1,33 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import moment from "moment";
 import "./customToolbar.css";
 import { ToolbarProps } from "react-big-calendar";
 
 const CustomToolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
-	const date = props.date;
-	const onNavigate = props.onNavigate;
-	const [month, setMonth] = useState("tammikuu");
-	const mMonth = moment(date).format("MMMM");
+	const { date, onNavigate } = props;
 
-	useEffect(() => {
-		setMonth(mMonth);
-	}, [mMonth]);
-
-	const goToBack = () => {
-		onNavigate("PREV");
-	};
-	const goToNext = () => {
-		onNavigate("NEXT");
-	};
+	const month = moment(date).format("MMMM");
+	const year = moment(date).format("YYYY");
 
 	return (
 		<div className="rbc-toolbar">
 			<div className="toolbar-container">
-				<button onClick={goToBack}>{"<<"}</button>
+				<button onClick={() => onNavigate("PREV")} aria-label="Previous Month">
+					{"<<"}
+				</button>
 				<span className="toolbar-label">
-					{month} {moment(date).format("YYYY")}
+					{month} {year}
 				</span>
-				<button onClick={goToNext}>{">>"}</button>
+				<button onClick={() => onNavigate("NEXT")} aria-label="Next Month">
+					{">>"}
+				</button>
 			</div>
 		</div>
 	);

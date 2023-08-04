@@ -1,34 +1,27 @@
-import { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 
-interface ErrorHandlerProps {
-	initialMessage?: string;
+interface ErrorModalProps {
+	errorMessage?: string | null;
 	onClose: () => void;
 }
 
-const ErrorModal: React.FC<ErrorHandlerProps> = ({
-	initialMessage,
-	onClose,
-}) => {
-	const [errorMessage, setErrorMessage] = useState<string | null>(
-		initialMessage ?? null
-	);
-	const [show, setShow] = useState<boolean>(Boolean(initialMessage));
-
-	const closeHandler = () => {
-		setErrorMessage(null);
-		setShow(false);
+const ErrorModal: React.FC<ErrorModalProps> = ({ errorMessage, onClose }) => {
+	const closeHandler: () => void = () => {
 		onClose();
 	};
 
 	return (
-		<Modal show={show} onHide={closeHandler}>
+		<Modal show={true} onHide={closeHandler}>
 			<Modal.Header closeButton>
 				<Modal.Title>Oho! Jotain meni vikaan</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>{errorMessage}</Modal.Body>
 			<Modal.Footer>
-				<Button variant="secondary" onClick={closeHandler}>
+				<Button
+					variant="secondary"
+					onClick={closeHandler}
+					aria-label="Close error modal"
+				>
 					Sulje
 				</Button>
 			</Modal.Footer>

@@ -150,7 +150,7 @@ const ItemList: React.FC = () => {
 				{error && (
 					<ErrorModal
 						aria-label="Show error modal"
-						initialMessage={error}
+						errorMessage={error}
 						onClose={() => setError(null)}
 					/>
 				)}

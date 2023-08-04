@@ -120,7 +120,7 @@ const CalendarComponent: React.FC = () => {
 				components={{ toolbar: customToolbar }}
 			/>
 			{error && (
-				<ErrorModal initialMessage={error} onClose={() => setError(null)} />
+				<ErrorModal errorMessage={error} onClose={() => setError(null)} />
 			)}
 			{selectedSlot && (
 				<AddModal

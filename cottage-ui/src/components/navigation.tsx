@@ -6,7 +6,10 @@ const Navigation: React.FC = () => {
 	const isCalendarActive = useMatch("/calendar");
 
 	return (
-		<nav className="navbar navbar-expand-lg navbar-dark">
+		<nav
+			className="navbar navbar-expand-lg navbar-dark"
+			aria-label="Main navigation"
+		>
 			<div className="container">
 				<ul className="nav nav-tabs justify-content-center">
 					<li className="nav-item">

@@ -22,7 +22,6 @@ const ItemList: React.FC = () => {
 	const [selectedStatus, setSelectedStatus] = useState<number | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const sortedItems = [...items].sort((a, b) => a.name.localeCompare(b.name));
 
 	useEffect(() => {
 		fetchData();
@@ -125,25 +124,27 @@ const ItemList: React.FC = () => {
 					</tr>
 				</thead>
 				<tbody>
-					{sortedItems.map((item) => {
-						if (
-							(selectedCategory === null ||
-								item.category === selectedCategory) &&
-							(selectedStatus === null || item.status === selectedStatus)
-						) {
-							return (
-								<ItemRow
-									key={item.id}
-									item={item}
-									handleStatusUpdate={handleStatusUpdate}
-									handleCommentChange={handleCommentChange}
-									handleEdit={handleEdit}
-									handleDelete={handleDelete}
-								/>
-							);
-						}
-						return null;
-					})}
+					{items
+						.sort((a, b) => a.name.localeCompare(b.name))
+						.map((item) => {
+							if (
+								(selectedCategory === null ||
+									item.category === selectedCategory) &&
+								(selectedStatus === null || item.status === selectedStatus)
+							) {
+								return (
+									<ItemRow
+										key={item.id}
+										item={item}
+										handleStatusUpdate={handleStatusUpdate}
+										handleCommentChange={handleCommentChange}
+										handleEdit={handleEdit}
+										handleDelete={handleDelete}
+									/>
+								);
+							}
+							return null;
+						})}
 				</tbody>
 			</table>
 			<div>

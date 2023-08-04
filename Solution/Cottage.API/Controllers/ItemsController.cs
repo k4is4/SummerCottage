@@ -85,7 +85,7 @@ namespace Cottage.API.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(item);
         }
 
         // POST: api/Items

@@ -5,23 +5,20 @@ import ModalProps from "../../types/modalProps";
 import itemService from "../../services/ItemService";
 import useValidation from "../../hooks/useValidation";
 import { Category, Status } from "../../types/enums";
+import ItemFormData from "../../types/itemFormData";
 
 const EditModal: React.FC<ModalProps> = (props) => {
-	const [editedName, setEditedName] = useState(props.selectedItem?.name ?? "");
-	const [editedStatus, setEditedStatus] = useState(
-		props.selectedItem?.status ?? 0
-	);
-	const [editedComment, setEditedComment] = useState(
-		props.selectedItem?.comment ?? ""
-	);
-	const [editedCategory, setEditedCategory] = useState(
-		props.selectedItem?.category ?? 0
-	);
+	const [formData, setFormData] = useState<ItemFormData>({
+		name: props.selectedItem?.name ?? "",
+		status: props.selectedItem?.status ?? Status["?"],
+		comment: props.selectedItem?.comment ?? "",
+		category: props.selectedItem?.category ?? Category.Muut,
+	});
 
 	const { nameError, commentError, formSubmitted, setFormSubmitted } =
 		useValidation(
-			editedName,
-			editedComment,
+			formData.name,
+			formData.comment,
 			props.items
 				.filter((item) => item.id !== props.selectedItem?.id)
 				.map((item) => item.name)
@@ -43,16 +40,13 @@ const EditModal: React.FC<ModalProps> = (props) => {
 	};
 
 	const editItem = async (itemId: number) => {
-		const updatedItem: Item = {
+		const updateData: Item = {
+			...formData,
 			id: itemId,
-			name: editedName,
-			status: editedStatus,
-			comment: editedComment,
-			category: editedCategory,
 			updatedOn: props.selectedItem?.updatedOn,
 		};
 
-		await itemService.updateItem(updatedItem);
+		const updatedItem: Item = await itemService.updateItem(updateData);
 		const updatedItems = props.items.map((item) =>
 			item.id === itemId ? updatedItem : item
 		);
@@ -75,9 +69,9 @@ const EditModal: React.FC<ModalProps> = (props) => {
 						type="text"
 						id="name-input"
 						className="form-control"
-						value={editedName}
+						value={formData.name}
 						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setEditedName(e.target.value)
+							setFormData({ ...formData, name: e.target.value })
 						}
 					/>
 					{nameError && formSubmitted && (
@@ -89,9 +83,12 @@ const EditModal: React.FC<ModalProps> = (props) => {
 					<select
 						id="status"
 						className="form-control"
-						value={editedStatus}
+						value={formData.status}
 						onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-							setEditedStatus(Number(e.target.value) as Status)
+							setFormData({
+								...formData,
+								status: Number(e.target.value) as Status,
+							})
 						}
 					>
 						{Object.entries(Status)
@@ -109,9 +106,9 @@ const EditModal: React.FC<ModalProps> = (props) => {
 						type="string"
 						id="comment-input"
 						className="form-control"
-						value={editedComment}
+						value={formData.comment}
 						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setEditedComment(e.target.value)
+							setFormData({ ...formData, comment: e.target.value })
 						}
 					/>
 					{commentError && formSubmitted && (
@@ -123,9 +120,12 @@ const EditModal: React.FC<ModalProps> = (props) => {
 					<select
 						id="category"
 						className="form-control"
-						value={editedCategory}
+						value={formData.category}
 						onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-							setEditedCategory(Number(e.target.value) as Category)
+							setFormData({
+								...formData,
+								category: Number(e.target.value) as Category,
+							})
 						}
 					>
 						{Object.entries(Category)

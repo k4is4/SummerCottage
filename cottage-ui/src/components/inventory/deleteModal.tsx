@@ -4,7 +4,7 @@ import ModalProps from "../../types/modalProps";
 import itemService from "../../services/ItemService";
 
 const DeleteModal: React.FC<ModalProps> = (props) => {
-	const handleConfirmDelete = async () => {
+	const handleConfirmDelete = async (): Promise<void> => {
 		if (props.selectedItem) {
 			try {
 				await deleteItem(props.selectedItem.id);
@@ -16,7 +16,7 @@ const DeleteModal: React.FC<ModalProps> = (props) => {
 		}
 	};
 
-	const deleteItem = async (itemId: number) => {
+	const deleteItem = async (itemId: number): Promise<void> => {
 		await itemService.deleteItem(itemId);
 		const updatedItems = props.items.filter((item) => item.id !== itemId);
 		props.setItems(updatedItems);

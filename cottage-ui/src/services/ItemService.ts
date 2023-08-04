@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 import Item from "../types/item";
 import apiClient from "./apiClient";
-import ItemWithoutId from "../types/itemWithoutId";
+import ItemWithoutId from "../types/itemFormData";
 import { ProblemDetails } from "../types/problemDetails";
 
 class ItemService {

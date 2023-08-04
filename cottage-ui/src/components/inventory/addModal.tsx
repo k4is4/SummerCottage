@@ -2,36 +2,31 @@ import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import Item from "../../types/item";
 import ModalProps from "../../types/modalProps";
-import ItemWithoutId from "../../types/itemWithoutId";
 import itemService from "../../services/ItemService";
 import useValidation from "../../hooks/useValidation";
 import { Category, Status } from "../../types/enums";
+import ItemFormData from "../../types/itemFormData";
 
 const AddModal: React.FC<ModalProps> = (props) => {
-	const [name, setName] = useState("");
-	const [status, setStatus] = useState(Status["?"]);
-	const [comment, setComment] = useState("");
-	const [category, setCategory] = useState(Category.Muut);
+	const [formData, setFormData] = useState<ItemFormData>({
+		name: "",
+		status: Status["?"],
+		comment: "",
+		category: Category.Muut,
+	});
 
 	const { nameError, commentError, formSubmitted, setFormSubmitted } =
 		useValidation(
-			name,
-			comment,
+			formData.name,
+			formData.comment,
 			props.items.map((item) => item.name)
 		);
 
 	const handleSave = async () => {
 		setFormSubmitted(true);
 		if (nameError.length < 1 && commentError.length < 1) {
-			const item: ItemWithoutId = {
-				name: name,
-				status: Number(status),
-				comment: comment,
-				category: Number(category),
-				updatedOn: undefined,
-			};
 			try {
-				const addedItem: Item = await itemService.addItem(item);
+				const addedItem: Item = await itemService.addItem(formData);
 				props.setItems([...props.items, addedItem]);
 				props.setShowModal(false);
 			} catch (e) {
@@ -57,9 +52,9 @@ const AddModal: React.FC<ModalProps> = (props) => {
 						type="text"
 						id="name-input"
 						className="form-control"
-						value={name}
+						value={formData.name}
 						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setName(e.target.value)
+							setFormData({ ...formData, name: e.target.value })
 						}
 					/>
 					{nameError && formSubmitted && (
@@ -71,9 +66,12 @@ const AddModal: React.FC<ModalProps> = (props) => {
 					<select
 						id="status"
 						className="form-control"
-						value={status}
+						value={formData.status}
 						onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-							setStatus(Number(e.target.value) as Status)
+							setFormData({
+								...formData,
+								status: Number(e.target.value) as Status,
+							})
 						}
 					>
 						{Object.entries(Status)
@@ -91,9 +89,9 @@ const AddModal: React.FC<ModalProps> = (props) => {
 						type="text"
 						id="comment-input"
 						className="form-control"
-						value={comment}
+						value={formData.comment}
 						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setComment(e.target.value)
+							setFormData({ ...formData, comment: e.target.value })
 						}
 					/>
 					{commentError && formSubmitted && (
@@ -105,9 +103,12 @@ const AddModal: React.FC<ModalProps> = (props) => {
 					<select
 						id="category"
 						className="form-control"
-						value={category}
+						value={formData.category}
 						onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-							setCategory(Number(e.target.value) as Category)
+							setFormData({
+								...formData,
+								category: Number(e.target.value) as Category,
+							})
 						}
 					>
 						{Object.entries(Category)

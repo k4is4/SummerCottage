@@ -4,6 +4,7 @@ import { CalendarEventColor } from "../../types/enums";
 import moment from "moment";
 import CalendarEvent from "../../types/calendarEvent";
 import calendarEventService from "../../services/CalendarEventService";
+import EventFormData from "../../types/eventFormData";
 
 interface EditModalProps {
 	event: CalendarEvent;
@@ -20,37 +21,30 @@ const EditModal: React.FC<EditModalProps> = ({
 	onDelete,
 	setError,
 }) => {
-	const [startDate, setStartDate] = useState(
-		moment(event.startDate).startOf("day").add(12, "hours").toDate()
-	);
-	const [endDate, setEndDate] = useState(
-		moment(event.endDate).startOf("day").add(12, "hours").toDate()
-	);
-	const [note, setNote] = useState(event.note);
-	const [color, setColor] = useState(event.color);
+	const [formData, setFormData] = useState<EventFormData>({
+		startDate: moment(event.startDate).startOf("day").add(12, "hours").toDate(),
+		endDate: moment(event.endDate).startOf("day").add(12, "hours").toDate(),
+		note: event.note,
+		color: event.color,
+	});
 
 	useEffect(() => {
-		setStartDate(
-			moment(event.startDate).startOf("day").add(12, "hours").toDate()
-		);
-		setEndDate(moment(event.endDate).startOf("day").add(12, "hours").toDate());
-		setNote(event.note);
-		setColor(event.color);
+		setFormData({
+			startDate: moment(event.startDate)
+				.startOf("day")
+				.add(12, "hours")
+				.toDate(),
+			endDate: moment(event.endDate).startOf("day").add(12, "hours").toDate(),
+			note: event.note,
+			color: event.color,
+		});
 	}, [event]);
 
-	const handleSave = async () => {
+	const handleSave = async (): Promise<void> => {
 		try {
-			const updateData: CalendarEvent = {
-				id: event.id,
-				startDate: startDate,
-				endDate: endDate,
-				note: note,
-				color: color,
-				updatedOn: event.updatedOn,
-			};
+			const updateData: CalendarEvent = { ...event, ...formData };
 			const updatedEvent: CalendarEvent =
 				await calendarEventService.updateCalendarEvent(updateData);
-
 			onSave(event, updatedEvent);
 		} catch (e) {
 			console.error("Error updating event:", e);
@@ -58,7 +52,7 @@ const EditModal: React.FC<EditModalProps> = ({
 		}
 	};
 
-	const handleDelete = async () => {
+	const handleDelete = async (): Promise<void> => {
 		try {
 			await calendarEventService.deleteCalendarEvent(event.id);
 			onDelete(event);
@@ -71,48 +65,63 @@ const EditModal: React.FC<EditModalProps> = ({
 	return (
 		<Modal show={true} onHide={onClose}>
 			<Modal.Header closeButton>
-				<Modal.Title>Edit Calendar Event</Modal.Title>
+				<Modal.Title>Muokkaa</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<Form.Group>
-					<Form.Label>Saapumispäivä</Form.Label>
+					<Form.Label htmlFor="startDate">Saapumispäivä</Form.Label>
 					<Form.Control
+						id="startDate"
 						type="date"
-						value={moment(startDate).format("YYYY-MM-DD")}
+						value={moment(formData.startDate).format("YYYY-MM-DD")}
 						onChange={(e) =>
-							setStartDate(
-								moment(e.target.value).startOf("day").add(12, "hours").toDate()
-							)
+							setFormData({
+								...formData,
+								startDate: moment(e.target.value)
+									.startOf("day")
+									.add(12, "hours")
+									.toDate(),
+							})
 						}
 					/>
 				</Form.Group>
 				<Form.Group>
-					<Form.Label>Lähtöpäivä</Form.Label>
+					<Form.Label htmlFor="endDate">Lähtöpäivä</Form.Label>
 					<Form.Control
+						id="endDate"
 						type="date"
-						value={moment(endDate).format("YYYY-MM-DD")}
+						value={moment(formData.endDate).format("YYYY-MM-DD")}
 						onChange={(e) =>
-							setEndDate(
-								moment(e.target.value).startOf("day").add(12, "hours").toDate()
-							)
+							setFormData({
+								...formData,
+								endDate: moment(e.target.value)
+									.startOf("day")
+									.add(12, "hours")
+									.toDate(),
+							})
 						}
 					/>
 				</Form.Group>
 				<Form.Group>
-					<Form.Label>Nimi</Form.Label>
+					<Form.Label htmlFor="note">Nimi</Form.Label>
 					<Form.Control
+						id="note"
 						type="text"
-						value={note}
-						onChange={(e) => setNote(e.target.value)}
+						value={formData.note}
+						onChange={(e) => setFormData({ ...formData, note: e.target.value })}
 					/>
 				</Form.Group>
 				<Form.Group>
-					<Form.Label>Väri</Form.Label>
+					<Form.Label htmlFor="color">Väri</Form.Label>
 					<Form.Control
+						id="color"
 						as="select"
-						value={color}
+						value={formData.color}
 						onChange={(e) =>
-							setColor(Number(e.target.value) as CalendarEventColor)
+							setFormData({
+								...formData,
+								color: Number(e.target.value) as CalendarEventColor,
+							})
 						}
 					>
 						<option value={CalendarEventColor.white}>Tyhjä</option>

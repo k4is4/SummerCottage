@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 import CalendarEvent from "../types/calendarEvent";
 import apiClient from "./apiClient";
-import CalendarEventWithoutId from "../types/calendarEventWithoutId";
+import CalendarEventWithoutId from "../types/eventFormData";
 import { ProblemDetails } from "../types/problemDetails";
 
 class CalendarEventService {

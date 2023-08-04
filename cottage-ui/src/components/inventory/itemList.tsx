@@ -6,11 +6,11 @@ import { Button } from "react-bootstrap";
 import AddModal from "./addModal";
 import "./itemList.css";
 import itemService from "../../services/ItemService";
-import { Spinner } from "react-bootstrap";
 import StatusFilter from "./statusFilter";
 import CategoryFilter from "./categoryFilter";
 import ItemRow from "./itemRow";
 import ErrorModal from "../errorModal";
+import LoadingIndicator from "../loadingIndicator";
 
 const ItemList: React.FC = () => {
 	const [items, setItems] = useState<Item[]>([]);
@@ -91,11 +91,7 @@ const ItemList: React.FC = () => {
 	};
 
 	if (isLoading) {
-		return (
-			<div className="container d-flex justify-content-center align-items-center">
-				<Spinner animation="border" variant="primary" className="spinner" />{" "}
-			</div>
-		);
+		return <LoadingIndicator />;
 	}
 
 	return (

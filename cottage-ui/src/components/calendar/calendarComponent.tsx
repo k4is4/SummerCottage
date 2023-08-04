@@ -9,8 +9,8 @@ import CalendarEvent from "../../types/calendarEvent";
 import calendarEventService from "../../services/CalendarEventService";
 import "moment/locale/fi";
 import customToolbar from "./customToolbar";
-import { Spinner } from "react-bootstrap";
 import ErrorModal from "../errorModal";
+import LoadingIndicator from "../loadingIndicator";
 
 const localizer = momentLocalizer(moment);
 
@@ -28,7 +28,7 @@ const CalendarComponent: React.FC = () => {
 		fetchEvents();
 	}, []);
 
-	const fetchEvents = async () => {
+	const fetchEvents = async (): Promise<void> => {
 		setIsLoading(true);
 		try {
 			const fetchedEvents: CalendarEvent[] =
@@ -47,28 +47,32 @@ const CalendarComponent: React.FC = () => {
 			setLastUpdated(latestDate);
 		} catch (error) {
 			console.error(error);
+			setError("Kalenterin haku ei onnistunut");
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
-	const handleSlotSelection = (slotInfo: SlotInfo) => {
+	const handleSlotSelection = (slotInfo: SlotInfo): void => {
 		setSelectedSlot(slotInfo);
 	};
 
-	const handleEventSelection = (event: CalendarEvent, e: SyntheticEvent) => {
+	const handleEventSelection = (
+		event: CalendarEvent,
+		e: SyntheticEvent
+	): void => {
 		setSelectedEvent(event);
 	};
 
 	const handleEventUpdate = (
 		oldEvent: CalendarEvent,
 		updatedEvent: CalendarEvent
-	) => {
+	): void => {
 		const updatedEventWithJsDates = {
 			...updatedEvent,
 			startDate: new Date(updatedEvent.startDate),
 			endDate: new Date(updatedEvent.endDate),
-			updatedOn: new Date().toLocaleDateString(),
+			updatedOn: new Date(),
 		};
 		setEvents(
 			events.map((event) =>
@@ -79,18 +83,14 @@ const CalendarComponent: React.FC = () => {
 		setSelectedEvent(null);
 	};
 
-	const handleEventDelete = (eventToDelete: CalendarEvent) => {
+	const handleEventDelete = (eventToDelete: CalendarEvent): void => {
 		setEvents(events.filter((event) => event.id !== eventToDelete.id));
 		setLastUpdated(new Date());
 		setSelectedEvent(null);
 	};
 
 	if (isLoading) {
-		return (
-			<div className="container d-flex justify-content-center align-items-center">
-				<Spinner animation="border" variant="primary" />{" "}
-			</div>
-		);
+		return <LoadingIndicator />;
 	}
 
 	return (

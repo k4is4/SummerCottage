@@ -16,17 +16,20 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
 			<select
 				id="statusFilter"
 				value={selectedStatus || ""}
-				onChange={(e) =>
+				onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
 					setSelectedStatus(
 						e.target.value ? parseInt(e.target.value, 10) : null
 					)
 				}
 			>
 				<option value="">Kaikki</option>
-				<option value={Status.Paljon}>{Status[Status.Paljon]}</option>
-				<option value={Status.Löytyy}>{Status[Status.Löytyy]}</option>
-				<option value={Status.Lopussa}>{Status[Status.Lopussa]}</option>
-				<option value={Status["?"]}>{Status[Status["?"]]}</option>
+				{Object.entries(Status)
+					.filter(([key]) => isNaN(Number(key)))
+					.map(([key, value]) => (
+						<option key={key} value={value}>
+							{key}
+						</option>
+					))}
 			</select>
 		</div>
 	);

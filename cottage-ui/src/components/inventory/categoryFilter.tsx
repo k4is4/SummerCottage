@@ -12,25 +12,24 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
 }) => {
 	return (
 		<div>
-			<label htmlFor="categoryFilter"></label>
+			<label htmlFor="categoryFilter" aria-label="Select category"></label>
 			<select
 				id="categoryFilter"
 				value={selectedCategory || ""}
-				onChange={(e) =>
+				onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
 					setSelectedCategory(
 						e.target.value ? parseInt(e.target.value, 10) : null
 					)
 				}
 			>
 				<option value="">Kaikki</option>
-				<option value={Category.Kuivaruoka}>
-					{Category[Category.Kuivaruoka]}
-				</option>
-				<option value={Category.Jääkaappi}>
-					{Category[Category.Jääkaappi]}
-				</option>
-				<option value={Category.Juomat}>{Category[Category.Juomat]}</option>
-				<option value={Category.Muut}>{Category[Category.Muut]}</option>
+				{Object.entries(Category)
+					.filter(([key]) => isNaN(Number(key)))
+					.map(([key, value]) => (
+						<option key={key} value={value}>
+							{key}
+						</option>
+					))}
 			</select>
 		</div>
 	);

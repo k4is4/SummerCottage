@@ -60,19 +60,25 @@ const EditModal: React.FC<ModalProps> = (props) => {
 	};
 
 	return (
-		<Modal show={true} onHide={() => props.setShowModal(false)}>
+		<Modal
+			show={true}
+			onHide={() => props.setShowModal(false)}
+			aria-labelledby="edit-item-modal"
+		>
 			<Modal.Header closeButton>
-				<Modal.Title>Muokkaa</Modal.Title>
+				<Modal.Title id="edit-item-modal">Muokkaa</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<div className="form-group">
-					<label htmlFor="name">Nimi</label>
+					<label htmlFor="name-input">Nimi</label>
 					<input
 						type="text"
-						id="name"
+						id="name-input"
 						className="form-control"
 						value={editedName}
-						onChange={(e) => setEditedName(e.target.value)}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setEditedName(e.target.value)
+						}
 					/>
 					{nameError && formSubmitted && (
 						<span className="text-danger">{nameError}</span>
@@ -84,22 +90,29 @@ const EditModal: React.FC<ModalProps> = (props) => {
 						id="status"
 						className="form-control"
 						value={editedStatus}
-						onChange={(e) => setEditedStatus(Number(e.target.value))}
+						onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+							setEditedStatus(Number(e.target.value) as Status)
+						}
 					>
-						<option value="1">{Status[1]}</option>
-						<option value="2">{Status[2]}</option>
-						<option value="3">{Status[3]}</option>
-						<option value="4">{Status[4]}</option>
+						{Object.entries(Status)
+							.filter(([key]) => isNaN(Number(key)))
+							.map(([key, value]) => (
+								<option key={key} value={value}>
+									{key}
+								</option>
+							))}
 					</select>
 				</div>
 				<div className="form-group">
-					<label htmlFor="comment">Kommentti</label>
+					<label htmlFor="comment-input">Kommentti</label>
 					<input
 						type="string"
-						id="comment"
+						id="comment-input"
 						className="form-control"
 						value={editedComment}
-						onChange={(e) => setEditedComment(e.target.value)}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setEditedComment(e.target.value)
+						}
 					/>
 					{commentError && formSubmitted && (
 						<span className="text-danger">{commentError}</span>
@@ -111,20 +124,33 @@ const EditModal: React.FC<ModalProps> = (props) => {
 						id="category"
 						className="form-control"
 						value={editedCategory}
-						onChange={(e) => setEditedCategory(Number(e.target.value))}
+						onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+							setEditedCategory(Number(e.target.value) as Category)
+						}
 					>
-						<option value="1">{Category[1]}</option>
-						<option value="2">{Category[2]}</option>
-						<option value="3">{Category[3]}</option>
-						<option value="4">{Category[4]}</option>
+						{Object.entries(Category)
+							.filter(([key]) => isNaN(Number(key)))
+							.map(([key, value]) => (
+								<option key={key} value={value}>
+									{key}
+								</option>
+							))}
 					</select>
 				</div>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button variant="secondary" onClick={() => props.setShowModal(false)}>
+				<Button
+					variant="secondary"
+					onClick={() => props.setShowModal(false)}
+					aria-label="Cancel"
+				>
 					Peruuta
 				</Button>
-				<Button variant="primary" onClick={handleSave}>
+				<Button
+					variant="primary"
+					onClick={handleSave}
+					aria-label={`Save changes on ${props.selectedItem?.name}`}
+				>
 					Tallenna
 				</Button>
 			</Modal.Footer>

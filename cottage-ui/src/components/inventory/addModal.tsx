@@ -9,9 +9,9 @@ import { Category, Status } from "../../types/enums";
 
 const AddModal: React.FC<ModalProps> = (props) => {
 	const [name, setName] = useState("");
-	const [status, setStatus] = useState("4");
+	const [status, setStatus] = useState(Status["?"]);
 	const [comment, setComment] = useState("");
-	const [category, setCategory] = useState("4");
+	const [category, setCategory] = useState(Category.Muut);
 
 	const { nameError, commentError, formSubmitted, setFormSubmitted } =
 		useValidation(
@@ -42,19 +42,25 @@ const AddModal: React.FC<ModalProps> = (props) => {
 	};
 
 	return (
-		<Modal show={true} onHide={() => props.setShowModal(false)}>
+		<Modal
+			show={true}
+			onHide={() => props.setShowModal(false)}
+			aria-labelledby="add-item-modal"
+		>
 			<Modal.Header closeButton>
-				<Modal.Title>Lisää</Modal.Title>
+				<Modal.Title id="add-item-modal">Lisää</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<div className="form-group">
-					<label htmlFor="name">Nimi</label>
+					<label htmlFor="name-input">Nimi</label>
 					<input
 						type="text"
-						id="name"
+						id="name-input"
 						className="form-control"
 						value={name}
-						onChange={(e) => setName(e.target.value)}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setName(e.target.value)
+						}
 					/>
 					{nameError && formSubmitted && (
 						<span className="text-danger">{nameError}</span>
@@ -66,22 +72,29 @@ const AddModal: React.FC<ModalProps> = (props) => {
 						id="status"
 						className="form-control"
 						value={status}
-						onChange={(e) => setStatus(e.target.value)}
+						onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+							setStatus(Number(e.target.value) as Status)
+						}
 					>
-						<option value="1">{Status[1]}</option>
-						<option value="2">{Status[2]}</option>
-						<option value="3">{Status[3]}</option>
-						<option value="4">{Status[4]}</option>
+						{Object.entries(Status)
+							.filter(([key]) => isNaN(Number(key)))
+							.map(([key, value]) => (
+								<option key={key} value={value}>
+									{key}
+								</option>
+							))}
 					</select>
 				</div>
 				<div className="form-group">
-					<label htmlFor="comment">Kommentti</label>
+					<label htmlFor="comment-input">Kommentti</label>
 					<input
 						type="text"
-						id="comment"
+						id="comment-input"
 						className="form-control"
 						value={comment}
-						onChange={(e) => setComment(e.target.value)}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setComment(e.target.value)
+						}
 					/>
 					{commentError && formSubmitted && (
 						<span className="text-danger">{commentError}</span>
@@ -93,20 +106,29 @@ const AddModal: React.FC<ModalProps> = (props) => {
 						id="category"
 						className="form-control"
 						value={category}
-						onChange={(e) => setCategory(e.target.value)}
+						onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+							setCategory(Number(e.target.value) as Category)
+						}
 					>
-						<option value="1">{Category[1]}</option>
-						<option value="2">{Category[2]}</option>
-						<option value="3">{Category[3]}</option>
-						<option value="4">{Category[4]}</option>
+						{Object.entries(Category)
+							.filter(([key]) => isNaN(Number(key)))
+							.map(([key, value]) => (
+								<option key={key} value={value}>
+									{key}
+								</option>
+							))}
 					</select>
 				</div>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button variant="secondary" onClick={() => props.setShowModal(false)}>
+				<Button
+					variant="secondary"
+					onClick={() => props.setShowModal(false)}
+					aria-label="Cancel"
+				>
 					Peruuta
 				</Button>
-				<Button variant="primary" onClick={handleSave}>
+				<Button variant="primary" onClick={handleSave} aria-label="Save">
 					Tallenna
 				</Button>
 			</Modal.Footer>

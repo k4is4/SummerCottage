@@ -34,7 +34,7 @@ const ItemRow: React.FC<ItemRowProps> = ({
 	};
 
 	return (
-		<tr key={item.id} tabIndex={0}>
+		<tr tabIndex={0}>
 			<td>{item.name}</td>
 			<td>
 				<Button

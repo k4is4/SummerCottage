@@ -7,7 +7,7 @@ const DeleteModal: React.FC<ModalProps> = (props) => {
 	const handleConfirmDelete = async () => {
 		if (props.selectedItem) {
 			try {
-				deleteItem(props.selectedItem.id);
+				await deleteItem(props.selectedItem.id);
 				props.setShowModal(false);
 			} catch (e) {
 				console.error("Error deleting item:", e);
@@ -24,18 +24,30 @@ const DeleteModal: React.FC<ModalProps> = (props) => {
 
 	return (
 		<div>
-			<Modal show={true} onHide={() => props.setShowModal(false)}>
+			<Modal
+				show={true}
+				onHide={() => props.setShowModal(false)}
+				aria-labelledby="delete-item-modal"
+			>
 				<Modal.Header closeButton>
-					<Modal.Title>Poista</Modal.Title>
+					<Modal.Title id="delete-item-modal">Poista</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<p>Haluatko varmasti poistaa {props.selectedItem?.name}?</p>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="secondary" onClick={() => props.setShowModal(false)}>
+					<Button
+						variant="secondary"
+						onClick={() => props.setShowModal(false)}
+						aria-label="Cancel"
+					>
 						Peruuta
 					</Button>
-					<Button variant="danger" onClick={handleConfirmDelete}>
+					<Button
+						variant="danger"
+						onClick={handleConfirmDelete}
+						aria-label={`Delete ${props.selectedItem?.name}`}
+					>
 						Poista
 					</Button>
 				</Modal.Footer>

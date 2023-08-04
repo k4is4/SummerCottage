@@ -28,11 +28,11 @@ const ItemList: React.FC = () => {
 		fetchData();
 	}, []);
 
-	const fetchData = async () => {
+	const fetchData = async (): Promise<void> => {
 		setIsLoading(true);
 		try {
-			const itemsFromApi = await itemService.getItems();
-			setItems(itemsFromApi);
+			const fetchedItems: Item[] = await itemService.getItems();
+			setItems(fetchedItems);
 		} catch (e) {
 			console.error("Error fetching items:", e);
 			setError("Inventaarion haku ei onnistunut");
@@ -41,17 +41,17 @@ const ItemList: React.FC = () => {
 		}
 	};
 
-	const handleEdit = (item: Item) => {
+	const handleEdit = (item: Item): void => {
 		setSelectedItem(item);
 		setShowEditModal(true);
 	};
 
-	const handleDelete = (item: Item) => {
+	const handleDelete = (item: Item): void => {
 		setSelectedItem(item);
 		setShowDeleteModal(true);
 	};
 
-	const handleStatusUpdate = async (item: Item) => {
+	const handleStatusUpdate = async (item: Item): Promise<void> => {
 		try {
 			const numberOfStatuses: number = 4;
 			const nextStatus: number = (item.status % numberOfStatuses) + 1;
@@ -67,7 +67,10 @@ const ItemList: React.FC = () => {
 		}
 	};
 
-	const handleCommentChange = async (item: Item, comment: string) => {
+	const handleCommentChange = async (
+		item: Item,
+		comment: string
+	): Promise<void> => {
 		try {
 			const updatedItem: Item = { ...item, comment: comment };
 			await itemService.updateItem(updatedItem);
@@ -93,6 +96,7 @@ const ItemList: React.FC = () => {
 						<th scope="col">Nimi</th>
 						<th scope="col">
 							<StatusFilter
+								aria-label="Choose status filter"
 								selectedStatus={selectedStatus}
 								setSelectedStatus={setSelectedStatus}
 							/>
@@ -102,6 +106,7 @@ const ItemList: React.FC = () => {
 						<th scope="col">Muokattu</th>
 						<th scope="col">
 							<CategoryFilter
+								aria-label="Choose category filter"
 								selectedCategory={selectedCategory}
 								setSelectedCategory={setSelectedCategory}
 							/>
@@ -112,7 +117,7 @@ const ItemList: React.FC = () => {
 							<Button
 								className="btn-sm"
 								onClick={() => setShowAddModal(true)}
-								aria-label="Lisää uusi tuote"
+								aria-label="Add new"
 							>
 								Lisää
 							</Button>
@@ -143,10 +148,15 @@ const ItemList: React.FC = () => {
 			</table>
 			<div>
 				{error && (
-					<ErrorModal initialMessage={error} onClose={() => setError(null)} />
+					<ErrorModal
+						aria-label="Show error modal"
+						initialMessage={error}
+						onClose={() => setError(null)}
+					/>
 				)}
 				{showAddModal && (
 					<AddModal
+						aria-label="Add new item modal"
 						selectedItem={null}
 						items={items}
 						setItems={setItems}
@@ -156,6 +166,7 @@ const ItemList: React.FC = () => {
 				)}
 				{showEditModal && (
 					<EditModal
+						aria-label="Edit item modal"
 						selectedItem={selectedItem}
 						items={items}
 						setItems={setItems}
@@ -165,6 +176,7 @@ const ItemList: React.FC = () => {
 				)}
 				{showDeleteModal && (
 					<DeleteModal
+						aria-label="Delete item modal"
 						selectedItem={selectedItem}
 						items={items}
 						setItems={setItems}

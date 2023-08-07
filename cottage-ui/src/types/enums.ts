@@ -13,7 +13,6 @@ export enum Category {
 }
 
 export enum CalendarEventColor {
-	"white" = 1,
-	"#BB0C0C" = 2,
-	"green" = 3,
+	"#BB0C0C" = 1,
+	"green" = 2,
 }

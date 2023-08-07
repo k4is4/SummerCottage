@@ -24,7 +24,7 @@ const AddModal: React.FC<AddModalProps> = ({
 		startDate: moment(slotInfo.start).startOf("day").add(12, "hours").toDate(),
 		endDate: moment(slotInfo.end).startOf("day").add(12, "hours").toDate(),
 		note: "",
-		color: CalendarEventColor.white,
+		color: CalendarEventColor.green,
 	});
 
 	const handleSave = async (): Promise<void> => {
@@ -100,7 +100,6 @@ const AddModal: React.FC<AddModalProps> = ({
 							})
 						}
 					>
-						<option value={CalendarEventColor.white}>Tyhjä</option>
 						<option value={CalendarEventColor["#BB0C0C"]}>
 							Punainen - Varattu
 						</option>

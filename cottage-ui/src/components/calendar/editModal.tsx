@@ -124,7 +124,6 @@ const EditModal: React.FC<EditModalProps> = ({
 							})
 						}
 					>
-						<option value={CalendarEventColor.white}>Tyhjä</option>
 						<option value={CalendarEventColor["#BB0C0C"]}>
 							Punainen - Varattu
 						</option>

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { CalendarEventColor } from "../../types/enums";
 import moment from "moment";
 import { SlotInfo } from "react-big-calendar";
 import CalendarEvent from "../../types/calendarEvent";
 import calendarEventService from "../../services/CalendarEventService";
 import EventFormData from "../../types/eventFormData";
+import "../modal.css";
 
 interface AddModalProps {
 	slotInfo: SlotInfo;
@@ -44,11 +45,12 @@ const AddModal: React.FC<AddModalProps> = ({
 				<Modal.Title>Lisää uusi mökkireissu</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<Form.Group>
-					<Form.Label htmlFor="startDate">Saapumispäivä</Form.Label>
-					<Form.Control
+				<div className="form-group">
+					<label htmlFor="startDate">Saapumispäivä</label>
+					<input
 						id="startDate"
 						type="date"
+						className="form-control"
 						value={moment(formData.startDate).format("YYYY-MM-DD")}
 						onChange={(e) =>
 							setFormData({
@@ -60,13 +62,14 @@ const AddModal: React.FC<AddModalProps> = ({
 							})
 						}
 					/>
-				</Form.Group>
-				<Form.Group>
-					<Form.Label htmlFor="endDate">Lähtöpäivä</Form.Label>
-					<Form.Control
+				</div>
+				<div className="form-group">
+					<label htmlFor="endDate">Lähtöpäivä</label>
+					<input
 						id="endDate"
 						type="date"
-						value={moment.utc(formData.endDate).format("YYYY-MM-DD")}
+						className="form-control"
+						value={moment(formData.endDate).format("YYYY-MM-DD")}
 						onChange={(e) =>
 							setFormData({
 								...formData,
@@ -77,21 +80,22 @@ const AddModal: React.FC<AddModalProps> = ({
 							})
 						}
 					/>
-				</Form.Group>
-				<Form.Group>
-					<Form.Label htmlFor="note">Nimi</Form.Label>
-					<Form.Control
+				</div>
+				<div className="form-group">
+					<label htmlFor="note">Nimi</label>
+					<input
 						id="note"
 						type="text"
+						className="form-control"
 						value={formData.note}
 						onChange={(e) => setFormData({ ...formData, note: e.target.value })}
 					/>
-				</Form.Group>
-				<Form.Group>
-					<Form.Label htmlFor="color">Väri</Form.Label>
-					<Form.Control
+				</div>
+				<div className="form-group">
+					<label htmlFor="color">Väri</label>
+					<select
 						id="color"
-						as="select"
+						className="form-control"
 						value={formData.color}
 						onChange={(e) =>
 							setFormData({
@@ -106,8 +110,8 @@ const AddModal: React.FC<AddModalProps> = ({
 						<option value={CalendarEventColor.green}>
 							Vihreä - Saa tulla mukaan
 						</option>
-					</Form.Control>
-				</Form.Group>
+					</select>
+				</div>
 			</Modal.Body>
 			<Modal.Footer>
 				<Button variant="secondary" onClick={onClose} aria-label="Cancel">

@@ -6,6 +6,7 @@ import itemService from "../../services/ItemService";
 import useValidation from "../../hooks/useValidation";
 import { Category, Status } from "../../types/enums";
 import ItemFormData from "../../types/itemFormData";
+import "../modal.css";
 
 const AddModal: React.FC<ModalProps> = (props) => {
 	const [formData, setFormData] = useState<ItemFormData>({

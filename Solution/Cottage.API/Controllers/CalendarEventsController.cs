@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using Cottage.API.Models;
+using Cottage.API.Services;
 
 namespace Cottage.API.Controllers
 {
@@ -13,91 +8,46 @@ namespace Cottage.API.Controllers
 	[ApiController]
 	public class CalendarEventsController : ControllerBase
 	{
-		private readonly CottageContext _context;
+		private readonly ICalendarEventsService _service;
 
-		public CalendarEventsController(CottageContext context)
+		public CalendarEventsController(ICalendarEventsService service)
 		{
-			_context = context;
+			_service = service ?? throw new ArgumentNullException(nameof(service));
 		}
 
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<CalendarEvent>>> GetCalendarEvents()
 		{
-			return await _context.CalendarEvents.ToListAsync();
+			List<CalendarEvent> events = await _service.GetCalendarEvents();
+			return Ok(events);
 		}
 
 		[HttpGet("{id}")]
 		public async Task<ActionResult<CalendarEvent>> GetCalendarEvent(int id)
 		{
-			var calendarEvent = await _context.CalendarEvents.FindAsync(id);
-
-			if (calendarEvent == null)
-			{
-				return NotFound();
-			}
-
-			return calendarEvent;
+			var calendarEvent = await _service.GetCalendarEvent(id);
+			return Ok(calendarEvent);
 		}
 
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutCalendarEvent(int id, [FromBody] CalendarEvent calendarEvent)
 		{
-			if (id != calendarEvent.Id)
-			{
-				return BadRequest();
-			}
-
-			calendarEvent.UpdatedOn = DateTime.UtcNow;
-
-			_context.Entry(calendarEvent).State = EntityState.Modified;
-
-			try
-			{
-				await _context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!CalendarEventExists(id))
-				{
-					return NotFound();
-				}
-				else
-				{
-					throw;
-				}
-			}
-
-			return Ok(calendarEvent);
+			var updatedEvent = await _service.UpdateCalendarEvent(id, calendarEvent);
+			return Ok(updatedEvent);
 		}
 
 		[HttpPost]
 		public async Task<ActionResult<CalendarEvent>> PostCalendarEvent([FromBody] CalendarEvent calendarEvent)
 		{
-			calendarEvent.UpdatedOn = DateTime.UtcNow;
-			_context.CalendarEvents.Add(calendarEvent);
-			await _context.SaveChangesAsync();
-
-			return CreatedAtAction("GetCalendarEvent", new { id = calendarEvent.Id }, calendarEvent);
+			var createdEvent = await _service.AddCalendarEvent(calendarEvent);
+			return CreatedAtAction(nameof(GetCalendarEvent), new { id = createdEvent.Id }, createdEvent);
 		}
 
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteCalendarEvent(int id)
 		{
-			var calendarEvent = await _context.CalendarEvents.FindAsync(id);
-			if (calendarEvent == null)
-			{
-				return NotFound();
-			}
-
-			_context.CalendarEvents.Remove(calendarEvent);
-			await _context.SaveChangesAsync();
-
+			await _service.DeleteCalendarEvent(id);
 			return NoContent();
-		}
-
-		private bool CalendarEventExists(int id)
-		{
-			return _context.CalendarEvents.Any(e => e.Id == id);
 		}
 	}
 }

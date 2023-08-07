@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using Cottage.API.Exceptions;
+﻿using Cottage.API.Exceptions;
 using Cottage.API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,10 +23,12 @@ namespace Cottage.API.Repositories
 			return await _context.Items.FindAsync(id);
 		}
 
-		public async Task<Item> Update(Item item)
+		public async Task<Item?> Update(Item item)
 		{
-			var dbItem = await _context.Items.FindAsync(item.Id) ?? throw new ItemNotFoundException(item.Id);
+			var dbItem = await _context.Items.FindAsync(item.Id);
 
+			if (dbItem != null) 
+			{ 			
 			dbItem.Name = item.Name;
 			dbItem.Status = item.Status;
 			dbItem.Comment = item.Comment;
@@ -38,12 +36,13 @@ namespace Cottage.API.Repositories
 			dbItem.UpdatedOn = item.UpdatedOn;
 
 			await _context.SaveChangesAsync();
-			return item;
+			}
+
+			return dbItem;
 		}
 
 		public async Task<Item> Add(Item item)
 		{
-			item.UpdatedOn = DateTime.Now;
 			_context.Items.Add(item);
 			await _context.SaveChangesAsync();
 			return item;
@@ -58,6 +57,11 @@ namespace Cottage.API.Repositories
 
 			_context.Items.Remove(item);
 			return await _context.SaveChangesAsync() > 0;
+		}
+
+		public async Task<bool> DoesNameExistAsync(string itemName, int? excludedId = null)
+		{
+			return await _context.Items.AnyAsync(i => i.Name.ToLower() == itemName.ToLower() && (!excludedId.HasValue || i.Id != excludedId));
 		}
 	}
 }

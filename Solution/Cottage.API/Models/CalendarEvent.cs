@@ -1,4 +1,6 @@
-﻿namespace Cottage.API.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Cottage.API.Models;
 
 public partial class CalendarEvent
 {
@@ -8,7 +10,8 @@ public partial class CalendarEvent
 
     public DateTime EndDate { get; set; }
 
-    public string Note { get; set; } = null!;
+	[StringLength(200, ErrorMessage = "Note should be 200 characters or less.")]
+	public string Note { get; set; } = null!;
 
     public int Color { get; set; }
 

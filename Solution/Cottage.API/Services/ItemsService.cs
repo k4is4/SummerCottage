@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Cottage.API.Exceptions;
+﻿using Cottage.API.Exceptions;
 using Cottage.API.Models;
 using Cottage.API.Repositories;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Cottage.API.Services
 {
@@ -46,34 +42,21 @@ namespace Cottage.API.Services
 				throw new ValidationsException("Mismatched item IDs");
 			}
 
-			var items = await _repository.GetAll();
-			var dbItem = items.FirstOrDefault(p => p.Id == id);
-
-			if (dbItem is null)
+			bool nameExists = await _repository.DoesNameExistAsync(item.Name, id);
+			if (nameExists)
 			{
-				throw new ItemNotFoundException(id);
-			}
-
-			var dbItemByName = items.FirstOrDefault(p => p.Name == item.Name);
-
-			if (dbItem != dbItemByName)
-			{
-				if (items.Any(p => p.Name.Equals(item.Name, StringComparison.InvariantCultureIgnoreCase)))
-				{
-					throw new ConflictException($"Item with the name '{item.Name}' exists already");
-				}
+				throw new ConflictException($"Item with the name '{item.Name}' exists already");
 			}
 
 			item.UpdatedOn = DateTime.UtcNow;
 
-			return await _repository.Update(item);	
+			return await _repository.Update(item) ?? throw new ItemNotFoundException(id);	
 		}
 
 		public async Task<Item> AddItem(Item item)
 		{
-			var items = await _repository.GetAll();
-
-			if (items.Any(p => p.Name.Equals(item.Name, StringComparison.InvariantCultureIgnoreCase)))
+			bool nameExists = await _repository.DoesNameExistAsync(item.Name);
+			if (nameExists)
 			{
 				throw new ConflictException($"Item with the name '{item.Name}' exists already");
 			}

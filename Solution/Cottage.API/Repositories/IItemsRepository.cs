@@ -8,8 +8,9 @@ namespace Cottage.API.Repositories
 	{
 		Task<List<Item>> GetAll();
 		Task<Item?> GetById(int id);
-		Task<Item> Update(Item item);
+		Task<Item?> Update(Item item);
 		Task<Item> Add(Item item);
 		Task<bool> Delete(int id);
+		Task<bool> DoesNameExistAsync(string itemName, int? excludedId = null);
 	}
 }

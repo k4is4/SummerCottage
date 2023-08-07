@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Cottage.API.Exceptions;
 using Cottage.API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +29,14 @@ namespace Cottage.API.Repositories
 
 		public async Task<Item> Update(Item item)
 		{
-			_context.Entry(item).State = EntityState.Modified;
+			var dbItem = await _context.Items.FindAsync(item.Id) ?? throw new ItemNotFoundException(item.Id);
+
+			dbItem.Name = item.Name;
+			dbItem.Status = item.Status;
+			dbItem.Comment = item.Comment;
+			dbItem.Category = item.Category;
+			dbItem.UpdatedOn = item.UpdatedOn;
+
 			await _context.SaveChangesAsync();
 			return item;
 		}

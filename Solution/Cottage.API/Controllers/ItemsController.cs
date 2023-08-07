@@ -34,68 +34,68 @@ namespace Cottage.API.Controllers
 		[HttpGet("{id}")]
 		public async Task<ActionResult<Item>> GetItem(int id)
 		{
-			try
-			{
+			//try
+			//{
 				var item = await _service.GetItem(id);
 				return Ok(item);
-			}
-			catch (KeyNotFoundException e) 
-			{ 
-				return NotFound(e.Message);
-			}
-			catch (Exception e)
-			{
-				return StatusCode(500, e.Message);
-			}
+			//}
+			//catch (KeyNotFoundException e) 
+			//{ 
+			//	return NotFound(e.Message);
+			//}
+			//catch (Exception e)
+			//{
+			//	return StatusCode(500, e.Message);
+			//}
 
 		}
 
 		[HttpPut("{id}")]
 		public async Task<ActionResult<Item>> PutItem(int id, [FromBody] Item item)
 		{
-			try
-			{
+			//try
+			//{
 				var updatedItem = await _service.UpdateItem(id, item);
 				return Ok(updatedItem);
-			}
-			catch (ArgumentException e)
-			{
-				return BadRequest(e.Message);
-			}
-			catch (Exception e)
-			{
-				return StatusCode(500, e.Message);
-			}
+			//}
+			//catch (ArgumentException e)
+			//{
+			//	return BadRequest(e.Message);
+			//}
+			//catch (Exception e)
+			//{
+			//	return StatusCode(500, e.Message);
+			//}
 		}
 
 		[HttpPost]
 		public async Task<ActionResult<Item>> PostItem([FromBody] Item item)
 		{
-			try
-			{
+			//try
+			//{
 			var createdItem = await _service.AddItem(item);
 			return CreatedAtAction(nameof(GetItem), new { id = createdItem.Id }, createdItem);
 
-			}
-			catch (Exception e)
-			{
-				return StatusCode(500, e.Message);
-			}
+			//}
+			//catch (Exception e)
+			//{
+			//	return StatusCode(500, e.Message);
+			//}
 		}
 
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteItem(int id)
 		{
-			try
-			{
+			//try
+			//{
 				if (await _service.DeleteItem(id))
 					return NoContent();
 				else return NotFound();
-			}
-			catch (Exception e)
-			{
-				return StatusCode(500, e.Message);
-			}
+			//}
+			//catch (Exception e)
+			//{
+			//	return StatusCode(500, e.Message);
+			//}
 		}
 	}
 }

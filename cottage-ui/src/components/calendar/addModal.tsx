@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { CalendarEventColor } from "../../types/enums";
-import moment from "moment";
 import { SlotInfo } from "react-big-calendar";
 import CalendarEvent from "../../types/calendarEvent";
 import calendarEventService from "../../services/CalendarEventService";
 import EventFormData from "../../types/eventFormData";
 import "../modal.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment-timezone";
+import { fi } from "date-fns/locale";
 
 interface AddModalProps {
 	slotInfo: SlotInfo;
@@ -47,39 +50,44 @@ const AddModal: React.FC<AddModalProps> = ({
 			<Modal.Body>
 				<div className="form-group">
 					<label htmlFor="startDate">Saapumispäivä</label>
-					<input
-						id="startDate"
-						type="date"
-						className="form-control"
-						value={moment(formData.startDate).format("YYYY-MM-DD")}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								startDate: moment(e.target.value)
-									.startOf("day")
-									.add(12, "hours")
-									.toDate(),
-							})
-						}
-					/>
+					<div>
+						<DatePicker
+							selected={formData.startDate}
+							dateFormat="dd.MM.yyyy"
+							locale={fi}
+							onChange={(date: Date) =>
+								setFormData({
+									...formData,
+									startDate: moment(date)
+										.tz("Europe/Helsinki")
+										.startOf("day")
+										.add(12, "hours")
+										.toDate(),
+								})
+							}
+							calendarStartDay={1}
+						/>
+					</div>
 				</div>
 				<div className="form-group">
 					<label htmlFor="endDate">Lähtöpäivä</label>
-					<input
-						id="endDate"
-						type="date"
-						className="form-control"
-						value={moment(formData.endDate).format("YYYY-MM-DD")}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								endDate: moment(e.target.value)
-									.startOf("day")
-									.add(12, "hours")
-									.toDate(),
-							})
-						}
-					/>
+					<div>
+						<DatePicker
+							selected={formData.endDate}
+							dateFormat="dd.MM.yyyy"
+							locale={fi}
+							onChange={(date: Date) =>
+								setFormData({
+									...formData,
+									endDate: moment(date)
+										.tz("Europe/Helsinki")
+										.startOf("day")
+										.add(12, "hours")
+										.toDate(),
+								})
+							}
+						/>
+					</div>
 				</div>
 				<div className="form-group">
 					<label htmlFor="note">Nimi</label>

@@ -39,13 +39,13 @@ namespace Cottage.API.Controllers
 				var item = await _service.GetItem(id);
 				return Ok(item);
 			}
-			catch (NullReferenceException) 
+			catch (KeyNotFoundException e) 
 			{ 
-				return NotFound();
+				return NotFound(e.Message);
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
-				return StatusCode(500);
+				return StatusCode(500, e.Message);
 			}
 
 		}

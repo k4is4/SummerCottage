@@ -28,27 +28,9 @@ namespace Cottage.API.Repositories
 
 		public async Task<Item> Update(Item item)
 		{
-			if (item is null)
-			{
-				throw new ArgumentNullException(nameof(item));
-			}
-
-			var items = await _context.Items.ToListAsync();
-			var dbItem = items.FirstOrDefault(p => p.Id == item.Id);
-
-			if (dbItem != null)
-			{
-				dbItem.Name = item.Name;
-				dbItem.Status = item.Status;
-				dbItem.Comment = item.Comment;
-				dbItem.Category = item.Category;
-				dbItem.UpdatedOn = DateTime.Now;
-
-				await _context.SaveChangesAsync();
-				return dbItem;
-			}
-
-			throw new NullReferenceException("Id not found");
+			_context.Entry(item).State = EntityState.Modified;
+			await _context.SaveChangesAsync();
+			return item;
 		}
 
 		public async Task<Item> Add(Item item)

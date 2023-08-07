@@ -22,13 +22,7 @@ namespace Cottage.API.Services
 		public async Task<Item> GetItem(int id)
 		{
 			var item = await _repository.GetById(id);
-
-			if (item == null)
-			{
-				throw new NullReferenceException("Id not found");
-			}
-
-			return item;
+			return item ?? throw new KeyNotFoundException("Id not found");
 		}
 
 		public async Task<Item> UpdateItem(int id, Item item)
@@ -51,17 +45,12 @@ namespace Cottage.API.Services
 		public async Task<Item> AddItem(Item item)
 		{
 			item.UpdatedOn = DateTime.UtcNow;
-
 			return await _repository.Add(item);
 		}
 
 		public async Task<bool> DeleteItem(int id)
 		{
-			if (await _repository.Delete(id))
-			{
-				return true;
-			}
-			return false;
+			 return await _repository.Delete(id);
 		}
 	}
 }

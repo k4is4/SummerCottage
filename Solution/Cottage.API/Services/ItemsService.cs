@@ -48,7 +48,7 @@ namespace Cottage.API.Services
 				throw new ConflictException($"Item with the name '{item.Name}' exists already");
 			}
 
-			item.UpdatedOn = DateTime.UtcNow;
+			item.UpdatedOn = DateTime.UtcNow.AddHours(3);
 
 			return await _repository.Update(item) ?? throw new ItemNotFoundException(id);	
 		}
@@ -61,7 +61,7 @@ namespace Cottage.API.Services
 				throw new ConflictException($"Item with the name '{item.Name}' exists already");
 			}
 
-			item.UpdatedOn = DateTime.UtcNow;
+			item.UpdatedOn = DateTime.UtcNow.AddHours(3);
 			return await _repository.Add(item);
 		}
 

@@ -42,14 +42,14 @@ namespace Cottage.API.Services
 				throw new ValidationsException("Mismatched item IDs");
 			}
 
-			calendarEvent.UpdatedOn = DateTime.UtcNow;
+			calendarEvent.UpdatedOn = DateTime.UtcNow.AddHours(3);
 
 			return await _repository.Update(calendarEvent) ?? throw new ItemNotFoundException(id);
 		}
 
 		public async Task<CalendarEvent> AddCalendarEvent(CalendarEvent calendarEvent)
 		{
-			calendarEvent.UpdatedOn = DateTime.UtcNow;
+			calendarEvent.UpdatedOn = DateTime.UtcNow.AddHours(3);
 			return await _repository.Add(calendarEvent);
 		}
 

@@ -3,7 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 import Item from "../../types/item";
 import ModalProps from "../../types/modalProps";
 import itemService from "../../services/ItemService";
-import useValidation from "../../hooks/useValidation";
+import useValidation from "../../hooks/useItemValidation";
 import { Category, Status } from "../../types/enums";
 import ItemFormData from "../../types/itemFormData";
 import "../modal.css";

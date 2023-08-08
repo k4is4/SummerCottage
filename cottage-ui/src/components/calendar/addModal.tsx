@@ -10,6 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment-timezone";
 import { fi } from "date-fns/locale";
+import useCalendarValidation from "../../hooks/useCalendarValidation";
 
 interface AddModalProps {
 	slotInfo: SlotInfo;
@@ -30,15 +31,20 @@ const AddModal: React.FC<AddModalProps> = ({
 		note: "",
 		color: CalendarEventColor.green,
 	});
+	const { dateError, commentError, formSubmitted, setFormSubmitted } =
+		useCalendarValidation(formData.startDate, formData.endDate, formData.note);
 
 	const handleSave = async (): Promise<void> => {
-		try {
-			const addedEvent: CalendarEvent =
-				await calendarEventService.addCalendarEvent(formData);
-			onSave(addedEvent);
-		} catch (e) {
-			console.error("Error adding event:", e);
-			setError("Lisäys ei onnistunut");
+		setFormSubmitted(true);
+		if (dateError.length < 1 && commentError.length < 1) {
+			try {
+				const addedEvent: CalendarEvent =
+					await calendarEventService.addCalendarEvent(formData);
+				onSave(addedEvent);
+			} catch (e) {
+				console.error("Error adding event:", e);
+				setError("Lisäys ei onnistunut");
+			}
 		}
 	};
 
@@ -88,6 +94,9 @@ const AddModal: React.FC<AddModalProps> = ({
 							}
 						/>
 					</div>
+					{dateError && formSubmitted && (
+						<span className="text-danger">{dateError}</span>
+					)}
 				</div>
 				<div className="form-group">
 					<label htmlFor="note">Nimi</label>
@@ -98,6 +107,9 @@ const AddModal: React.FC<AddModalProps> = ({
 						value={formData.note}
 						onChange={(e) => setFormData({ ...formData, note: e.target.value })}
 					/>
+					{commentError && formSubmitted && (
+						<span className="text-danger">{commentError}</span>
+					)}
 				</div>
 				<div className="form-group">
 					<label htmlFor="color">Väri</label>

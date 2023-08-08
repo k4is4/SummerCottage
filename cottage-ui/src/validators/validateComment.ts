@@ -1,6 +1,6 @@
-const validateComment = (comment: string) => {
-	if (comment.length > 100) {
-		return "Kommentti voi olla enintään 100 merkkiä";
+const validateComment = (comment: string, maxLength: number) => {
+	if (comment.length > maxLength) {
+		return `Kommentti voi olla enintään ${maxLength} merkkiä`;
 	} else {
 		return "";
 	}

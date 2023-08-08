@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment-timezone";
 import { fi } from "date-fns/locale";
+import useCalendarValidation from "../../hooks/useCalendarValidation";
 
 interface EditModalProps {
 	event: CalendarEvent;
@@ -31,6 +32,8 @@ const EditModal: React.FC<EditModalProps> = ({
 		note: event.note,
 		color: event.color,
 	});
+	const { dateError, commentError, formSubmitted, setFormSubmitted } =
+		useCalendarValidation(formData.startDate, formData.endDate, formData.note);
 
 	useEffect(() => {
 		setFormData({
@@ -45,14 +48,17 @@ const EditModal: React.FC<EditModalProps> = ({
 	}, [event]);
 
 	const handleSave = async (): Promise<void> => {
-		try {
-			const updateData: CalendarEvent = { ...event, ...formData };
-			const updatedEvent: CalendarEvent =
-				await calendarEventService.updateCalendarEvent(updateData);
-			onSave(event, updatedEvent);
-		} catch (e) {
-			console.error("Error updating event:", e);
-			setError("Muokkaus ei onnistunut");
+		setFormSubmitted(true);
+		if (dateError.length < 1 && commentError.length < 1) {
+			try {
+				const updateData: CalendarEvent = { ...event, ...formData };
+				const updatedEvent: CalendarEvent =
+					await calendarEventService.updateCalendarEvent(updateData);
+				onSave(event, updatedEvent);
+			} catch (e) {
+				console.error("Error updating event:", e);
+				setError("Muokkaus ei onnistunut");
+			}
 		}
 	};
 
@@ -112,6 +118,9 @@ const EditModal: React.FC<EditModalProps> = ({
 							}
 						/>
 					</div>
+					{dateError && formSubmitted && (
+						<span className="text-danger">{dateError}</span>
+					)}
 				</div>
 				<div className="form-group">
 					<label htmlFor="note">Nimi</label>
@@ -122,6 +131,9 @@ const EditModal: React.FC<EditModalProps> = ({
 						value={formData.note}
 						onChange={(e) => setFormData({ ...formData, note: e.target.value })}
 					/>
+					{commentError && formSubmitted && (
+						<span className="text-danger">{commentError}</span>
+					)}
 				</div>
 				<div className="form-group">
 					<label htmlFor="color">Väri</label>

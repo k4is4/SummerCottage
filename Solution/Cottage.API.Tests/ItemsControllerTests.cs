@@ -19,6 +19,13 @@ namespace Cottage.API.Tests
 			_sut = new ItemsController(_mockService.Object);
 		}
 
+		[TestCleanup]
+		public void TestCleanUp()
+		{
+			_sut = null;
+			_mockService = null;
+		}
+
 		[TestMethod]
 		public void Constructor_ServiceIsNull_ThrowsArgumentNullException()
 		{
@@ -302,9 +309,10 @@ namespace Cottage.API.Tests
 				UpdatedOn = new DateTime(2023, 1, 1),
 			};
 
+			// Act
 			await _sut.PutItem(1, testItem);
 
-			// Act => Assert
+			// Assert
 			_mockService.Verify(m => m.UpdateItem(1, testItem));
 		}
 

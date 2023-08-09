@@ -1,8 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 
 const apiClient: AxiosInstance = axios.create({
-	baseURL: "https://app-cottage.azurewebsites.net/api",
-	// baseURL: "https://localhost:7202/api",
+	baseURL: process.env.REACT_APP_API_BASE_URL,
 	headers: {
 		"Content-Type": "application/json",
 	},

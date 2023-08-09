@@ -18,22 +18,18 @@ builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 builder.Services.AddCors(options =>
 {
-	options.AddDefaultPolicy(
-		builder =>
-		{
-			builder.AllowAnyOrigin()
-				   .AllowAnyHeader()
-				   .AllowAnyMethod();
-		});
+	options.AddDefaultPolicy(b =>
+	{
+		b.WithOrigins(builder.Configuration["FrontEndUrl"], "http://localhost:3000")
+		 .AllowAnyHeader()
+		 .AllowAnyMethod();
+	});
 });
 
 var app = builder.Build();
 
-//if (app.Environment.IsDevelopment())
-//{
-	app.UseSwagger();
-	app.UseSwaggerUI();
-//}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors();
 app.UseHttpsRedirection();

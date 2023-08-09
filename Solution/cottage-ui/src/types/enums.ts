@@ -9,7 +9,8 @@ export enum Category {
 	Kuivaruoka = 1,
 	Jääkaappi = 2,
 	Juomat = 3,
-	Muut = 4,
+	Pakastin = 4,
+	Muut = 5,
 }
 
 export enum CalendarEventColor {

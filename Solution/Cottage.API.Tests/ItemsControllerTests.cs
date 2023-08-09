@@ -155,6 +155,18 @@ namespace Cottage.API.Tests
 		[TestMethod]
 		public async Task GetItem_Success_ReturnsOkObjectResult()
 		{
+			// Arrange
+			var testItem = new Item()
+			{
+				Id = 1,
+				Name = "TestItem",
+				Status = 1,
+				Category = 1,
+				UpdatedOn = new DateTime(2023, 1, 1),
+			};
+
+			_mockService.Setup(m => m.GetItem(1)).ReturnsAsync(testItem);
+
 			// Act
 			var result = await _sut.GetItem(1);
 

@@ -1,5 +1,7 @@
+Solution/cottage-ui/build
+Solution/cottage-ui/.env
+
 # VSCode
-.env
 
 # dependencies
 /node_modules
@@ -11,7 +13,6 @@
 
 # production
 /build
-Solution/cottage-ui/build
 
 # misc
 .DS_Store

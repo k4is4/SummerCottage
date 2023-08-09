@@ -12,7 +12,9 @@ import customToolbar from "./customToolbar";
 import ErrorModal from "../errorModal";
 import LoadingIndicator from "../loadingIndicator";
 
+moment.tz.setDefault("Europe/Helsinki");
 const localizer = momentLocalizer(moment);
+localizer.segmentOffset = 0;
 
 const CalendarComponent: React.FC = () => {
 	const [events, setEvents] = useState<CalendarEvent[]>([]);

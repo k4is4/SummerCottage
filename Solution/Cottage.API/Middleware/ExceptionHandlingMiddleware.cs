@@ -2,10 +2,11 @@
 using System;
 using System.Text.Json;
 using Cottage.API.Exceptions;
+using Cottage.API.Models;
 
 namespace Cottage.API.Middleware
 {
-	internal sealed class ExceptionHandlingMiddleware : IMiddleware
+	public sealed class ExceptionHandlingMiddleware : IMiddleware
 	{
 		private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
@@ -29,11 +30,11 @@ namespace Cottage.API.Middleware
 		{
 			var statusCode = GetStatusCode(exception);
 
-			var response = new
+			var response = new ErrorResponse
 			{
-				title = GetTitle(exception),
-				status = GetStatusCode(exception),
-				detail = exception.Message,
+				Title = GetTitle(exception),
+				Status = GetStatusCode(exception),
+				Detail = exception.Message,
 			};
 
 			httpContext.Response.ContentType = "application/json";

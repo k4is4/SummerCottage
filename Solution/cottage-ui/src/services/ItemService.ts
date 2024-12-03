@@ -11,11 +11,25 @@ class ItemService {
 	// 		.then((response: AxiosResponse<Item[]>) => response.data);
 	// }
 
-	async getItems(): Promise<Item[]> {
+	async getItems(token: any): Promise<Item[]> {
 		const backendUrl = 'https://app-cottage.azurewebsites.net/api';
-		return axios
-			.get<Item[]>(`${backendUrl}/items`)
-			.then((response: AxiosResponse<Item[]>) => response.data);
+		// return axios
+		// 	.get<Item[]>(`${backendUrl}/items`)
+		// 	.then((response: AxiosResponse<Item[]>) => response.data);
+		try {
+			// Make the API request with the token in the Authorization header
+			return axios
+				.get<Item[]>(`${backendUrl}/items`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+						Accept: 'application/json',
+					},
+				})
+				.then((response: AxiosResponse<Item[]>) => response.data);
+		} catch (error) {
+			console.error('Error acquiring token or fetching items:', error);
+			throw error; // Propagate the error to the caller
+		}
 	}
 
 	async addItem(item: ItemFormData): Promise<Item> {

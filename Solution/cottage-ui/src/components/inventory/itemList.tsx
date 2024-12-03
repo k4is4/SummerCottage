@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from "react";
-import Item from "../../types/item";
-import EditModal from "./editModal";
-import DeleteModal from "./deleteModal";
-import { Button } from "react-bootstrap";
-import AddModal from "./addModal";
-import "./itemList.css";
-import itemService from "../../services/ItemService";
-import StatusFilter from "./statusFilter";
-import CategoryFilter from "./categoryFilter";
-import ItemRow from "./itemRow";
-import ErrorModal from "../errorModal";
-import LoadingIndicator from "../loadingIndicator";
+import React, { useEffect, useState } from 'react';
+import Item from '../../types/item';
+import EditModal from './editModal';
+import DeleteModal from './deleteModal';
+import { Button } from 'react-bootstrap';
+import AddModal from './addModal';
+import './itemList.css';
+import itemService from '../../services/ItemService';
+import StatusFilter from './statusFilter';
+import CategoryFilter from './categoryFilter';
+import ItemRow from './itemRow';
+import ErrorModal from '../errorModal';
+import LoadingIndicator from '../loadingIndicator';
+
+import { useMsal, MsalAuthenticationTemplate } from '@azure/msal-react';
+import { InteractionType } from '@azure/msal-browser';
+import { loginRequest } from '../../authConfig';
 
 const ItemList: React.FC = () => {
 	const [items, setItems] = useState<Item[]>([]);
@@ -27,14 +31,26 @@ const ItemList: React.FC = () => {
 		fetchData();
 	}, []);
 
+	const { instance, accounts } = useMsal();
+
 	const fetchData = async (): Promise<void> => {
 		setIsLoading(true);
+		var accessToken;
 		try {
-			const fetchedItems: Item[] = await itemService.getItems();
+			instance
+				.acquireTokenSilent({
+					...loginRequest,
+					account: accounts[0],
+				})
+				.then((response) => {
+					accessToken = response.accessToken;
+					console.log(response.accessToken);
+				});
+			const fetchedItems: Item[] = await itemService.getItems(accessToken);
 			setItems(fetchedItems);
 		} catch (e) {
-			console.error("Error fetching items:", e);
-			setError("Inventaarion haku ei onnistunut");
+			console.error('Error fetching items:', e);
+			setError('Inventaarion haku ei onnistunut');
 		} finally {
 			setIsLoading(false);
 		}
@@ -61,8 +77,8 @@ const ItemList: React.FC = () => {
 			);
 			setItems(updatedItems);
 		} catch (e) {
-			console.error("Error updating status:", e);
-			setError("Statuksen päivitys ei onnistunut");
+			console.error('Error updating status:', e);
+			setError('Statuksen päivitys ei onnistunut');
 		}
 	};
 
@@ -78,8 +94,8 @@ const ItemList: React.FC = () => {
 			);
 			setItems(updatedItems);
 		} catch (error) {
-			console.error("Error updating status:", error);
-			setError("Kommentin päivitys ei onnistunut");
+			console.error('Error updating status:', error);
+			setError('Kommentin päivitys ei onnistunut');
 		}
 	};
 

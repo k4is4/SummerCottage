@@ -26,34 +26,33 @@ const ItemList: React.FC = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	useEffect(() => {
-		fetchData();
-	});
-
 	const { instance, accounts } = useMsal();
 
-	const fetchData = async (): Promise<void> => {
-		setIsLoading(true);
-		var accessToken;
-		try {
-			instance
-				.acquireTokenSilent({
-					...loginRequest,
-					account: accounts[0],
-				})
-				.then((response) => {
-					accessToken = response.accessToken;
-					console.log(response.accessToken);
-				});
-			const fetchedItems: Item[] = await itemService.getItems(accessToken);
-			setItems(fetchedItems);
-		} catch (e) {
-			console.error('Error fetching items:', e);
-			setError('Inventaarion haku ei onnistunut');
-		} finally {
-			setIsLoading(false);
-		}
-	};
+	useEffect(() => {
+		const fetchData = async (): Promise<void> => {
+			setIsLoading(true);
+			var accessToken;
+			try {
+				instance
+					.acquireTokenSilent({
+						...loginRequest,
+						account: accounts[0],
+					})
+					.then((response) => {
+						accessToken = response.accessToken;
+						console.log(response.accessToken);
+					});
+				const fetchedItems: Item[] = await itemService.getItems(accessToken);
+				setItems(fetchedItems);
+			} catch (e) {
+				console.error('Error fetching items:', e);
+				setError('Inventaarion haku ei onnistunut');
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		fetchData();
+	}, [accounts, instance]);
 
 	const handleEdit = (item: Item): void => {
 		setSelectedItem(item);

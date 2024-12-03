@@ -12,8 +12,7 @@ import ItemRow from './itemRow';
 import ErrorModal from '../errorModal';
 import LoadingIndicator from '../loadingIndicator';
 
-import { useMsal, MsalAuthenticationTemplate } from '@azure/msal-react';
-import { InteractionType } from '@azure/msal-browser';
+import { useMsal } from '@azure/msal-react';
 import { loginRequest } from '../../authConfig';
 
 const ItemList: React.FC = () => {
@@ -29,7 +28,7 @@ const ItemList: React.FC = () => {
 
 	useEffect(() => {
 		fetchData();
-	}, []);
+	});
 
 	const { instance, accounts } = useMsal();
 

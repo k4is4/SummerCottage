@@ -3,32 +3,48 @@ import Item from '../types/item';
 import apiClient from './apiClient';
 import ItemFormData from '../types/itemFormData';
 import { ProblemDetails } from '../types/problemDetails';
+import msalInstance from '../msalConfig';
 
 class ItemService {
-	// async getItems(): Promise<Item[]> {
-	// 	return apiClient
-	// 		.get<Item[]>("/items")
-	// 		.then((response: AxiosResponse<Item[]>) => response.data);
-	// }
+	private async getAccessToken(): Promise<string> {
+		try {
+			const accounts = msalInstance.getAllAccounts();
+			if (accounts.length === 0) {
+				throw new Error('No accounts found. Please log in.');
+			}
 
-	async getItems(token: any): Promise<Item[]> {
+			const request = {
+				scopes: ['api://d76453d7-bc8c-425f-9ee9-bdb7d2d071ce/Invoke'], // Replace with your API's scope
+				account: accounts[0], // Use the first account (or let the user pick one)
+			};
+
+			const response = await msalInstance.acquireTokenSilent(request);
+			return response.accessToken;
+		} catch (error) {
+			console.error('Error acquiring token silently:', error);
+			throw error;
+		}
+	}
+
+	public async getItems(): Promise<Item[]> {
 		const backendUrl = 'https://app-cottage.azurewebsites.net/api';
-		// return axios
-		// 	.get<Item[]>(`${backendUrl}/items`)
-		// 	.then((response: AxiosResponse<Item[]>) => response.data);
+		const accessToken = await this.getAccessToken();
+
 		try {
 			// Make the API request with the token in the Authorization header
-			return axios
-				.get<Item[]>(`${backendUrl}/items`, {
+			const response: AxiosResponse<Item[]> = await axios.get(
+				`${backendUrl}/items`,
+				{
 					headers: {
-						Authorization: `Bearer ${token}`,
+						Authorization: `Bearer ${accessToken}`,
 						Accept: 'application/json',
 					},
-				})
-				.then((response: AxiosResponse<Item[]>) => response.data);
+				}
+			);
+			return response.data;
 		} catch (error) {
-			console.error('Error acquiring token or fetching items:', error);
-			throw error; // Propagate the error to the caller
+			console.error('Error fetching items:', error);
+			throw error;
 		}
 	}
 

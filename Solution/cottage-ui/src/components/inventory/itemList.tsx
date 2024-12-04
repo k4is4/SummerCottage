@@ -12,9 +12,6 @@ import ItemRow from './itemRow';
 import ErrorModal from '../errorModal';
 import LoadingIndicator from '../loadingIndicator';
 
-import { useMsal } from '@azure/msal-react';
-import { loginRequest } from '../../authConfig';
-
 const ItemList: React.FC = () => {
 	const [items, setItems] = useState<Item[]>([]);
 	const [selectedItem, setSelectedItem] = useState<Item | null>(null);
@@ -26,44 +23,18 @@ const ItemList: React.FC = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const { instance, accounts } = useMsal();
-
 	useEffect(() => {
-		fetchData((error, result) => {
-			if (error) {
-				console.error('Callback received an error:', error);
-				return;
-			}
-			console.log('Callback received items:', result);
-		});
-	});
+		fetchData();
+	}, []);
 
-	const fetchData = async (
-		callback: (error: any, result?: Item[]) => void
-	): Promise<void> => {
+	const fetchData = async (): Promise<void> => {
 		setIsLoading(true);
-		let accessToken;
 		try {
-			// Get access token
-			const tokenResponse = await instance.acquireTokenSilent({
-				...loginRequest,
-				account: accounts[0],
-			});
-			accessToken = tokenResponse.accessToken;
-			console.log(accessToken);
-
-			// Fetch items
-			const fetchedItems: Item[] = await itemService.getItems(accessToken);
+			const fetchedItems: Item[] = await itemService.getItems();
 			setItems(fetchedItems);
-
-			// Execute callback with result
-			callback(null, fetchedItems);
 		} catch (e) {
 			console.error('Error fetching items:', e);
 			setError('Inventaarion haku ei onnistunut');
-
-			// Execute callback with error
-			callback(e);
 		} finally {
 			setIsLoading(false);
 		}

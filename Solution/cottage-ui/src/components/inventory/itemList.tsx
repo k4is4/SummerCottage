@@ -29,30 +29,45 @@ const ItemList: React.FC = () => {
 	const { instance, accounts } = useMsal();
 
 	useEffect(() => {
-		const fetchData = async (): Promise<void> => {
-			setIsLoading(true);
-			var accessToken;
-			try {
-				instance
-					.acquireTokenSilent({
-						...loginRequest,
-						account: accounts[0],
-					})
-					.then((response) => {
-						accessToken = response.accessToken;
-						console.log(response.accessToken);
-					});
-				const fetchedItems: Item[] = await itemService.getItems(accessToken);
-				setItems(fetchedItems);
-			} catch (e) {
-				console.error('Error fetching items:', e);
-				setError('Inventaarion haku ei onnistunut');
-			} finally {
-				setIsLoading(false);
+		fetchData((error, result) => {
+			if (error) {
+				console.error('Callback received an error:', error);
+				return;
 			}
-		};
-		fetchData();
-	}, [accounts, instance]);
+			console.log('Callback received items:', result);
+		});
+	});
+
+	const fetchData = async (
+		callback: (error: any, result?: Item[]) => void
+	): Promise<void> => {
+		setIsLoading(true);
+		let accessToken;
+		try {
+			// Get access token
+			const tokenResponse = await instance.acquireTokenSilent({
+				...loginRequest,
+				account: accounts[0],
+			});
+			accessToken = tokenResponse.accessToken;
+			console.log(accessToken);
+
+			// Fetch items
+			const fetchedItems: Item[] = await itemService.getItems(accessToken);
+			setItems(fetchedItems);
+
+			// Execute callback with result
+			callback(null, fetchedItems);
+		} catch (e) {
+			console.error('Error fetching items:', e);
+			setError('Inventaarion haku ei onnistunut');
+
+			// Execute callback with error
+			callback(e);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	const handleEdit = (item: Item): void => {
 		setSelectedItem(item);

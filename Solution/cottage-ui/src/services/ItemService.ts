@@ -3,43 +3,43 @@ import Item from '../types/item';
 import apiClient from './apiClient';
 import ItemFormData from '../types/itemFormData';
 import { ProblemDetails } from '../types/problemDetails';
-// import msalInstance from '../msalConfig';
+import msalInstance from '../msalConfig';
 
 class ItemService {
-	// private async getAccessToken(): Promise<string> {
-	// 	try {
-	// 		const accounts = msalInstance.getAllAccounts();
-	// 		if (accounts.length === 0) {
-	// 			throw new Error('No accounts found. Please log in.');
-	// 		}
+	private async getAccessToken(): Promise<string> {
+		try {
+			const accounts = msalInstance.getAllAccounts();
+			if (accounts.length === 0) {
+				throw new Error('No accounts found. Please log in.');
+			}
 
-	// 		const request = {
-	// 			scopes: ['api://d76453d7-bc8c-425f-9ee9-bdb7d2d071ce/Invoke'], // Replace with your API's scope
-	// 			account: accounts[0], // Use the first account (or let the user pick one)
-	// 		};
+			const request = {
+				scopes: ['api://d76453d7-bc8c-425f-9ee9-bdb7d2d071ce/Invoke'], // Replace with your API's scope
+				account: accounts[0], // Use the first account (or let the user pick one)
+			};
 
-	// 		const response = await msalInstance.acquireTokenSilent(request);
-	// 		return response.accessToken;
-	// 	} catch (error) {
-	// 		console.error('Error acquiring token silently:', error);
-	// 		throw error;
-	// 	}
-	// }
+			const response = await msalInstance.acquireTokenSilent(request);
+			return response.accessToken;
+		} catch (error) {
+			console.error('Error acquiring token silently:', error);
+			throw error;
+		}
+	}
 
 	public async getItems(): Promise<Item[]> {
 		const backendUrl = 'https://app-cottage.azurewebsites.net/api';
-		// const accessToken = await this.getAccessToken();
+		const accessToken = await this.getAccessToken();
 
 		try {
 			// Make the API request with the token in the Authorization header
 			const response: AxiosResponse<Item[]> = await axios.get(
-				`${backendUrl}/items`
-				// {
-				// 	headers: {
-				// 		Authorization: `Bearer ${accessToken}`,
-				// 		Accept: 'application/json',
-				// 	},
-				// }
+				`${backendUrl}/items`,
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+						Accept: 'application/json',
+					},
+				}
 			);
 			return response.data;
 		} catch (error) {

@@ -8,12 +8,19 @@
 	"auth": {
 		"identityProviders": {
 			"azureActiveDirectory": {
+				"userDetailsClaim": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
 				"registration": {
-					"openIdIssuer": "https://login.microsoftonline.com/39423c33-2670-4dbc-966d-9041898f8323/v2.0",
+					"openIdIssuer": "https://login.microsoftonline.com/39423c33-2670-4dbc-966d-9041898f8323",
 					"clientIdSettingName": "AZURE_CLIENT_ID",
-					"clientSecretSettingName": "salaisuus"
+					"clientSecretSettingName": "AZURE_CLIENT_SECRET"
+				},
+				"login": {
+					"loginParameters": ["resource=https://graph.microsoft.com"]
 				}
 			}
 		}
+	},
+	"globalHeaders": {
+		"Cache-Control": "no-cache"
 	}
 }

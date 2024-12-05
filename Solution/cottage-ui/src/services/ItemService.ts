@@ -27,7 +27,7 @@ class ItemService {
 	// }
 
 	public async getItems(): Promise<Item[]> {
-		const backendUrl = 'https://app-cottage.azurewebsites.net/api';
+		const backendUrl = 'https://app-kaisa-backend.azurewebsites.net/api';
 		// const accessToken = await this.getAccessToken();
 
 		try {

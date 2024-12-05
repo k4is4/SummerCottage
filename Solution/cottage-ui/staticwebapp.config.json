@@ -18,9 +18,15 @@
 				"registration": {
 					"openIdIssuer": "https://login.microsoftonline.com/bf05f699-9934-4606-9238-1a93f805568f",
 					"clientIdSettingName": "AZURE_CLIENT_ID",
-					"clientSecretSettingName": "AZURE_CLIENT_SECRET_APP_SETTING_NAME"
+					"clientSecretSettingName": "AZURE_CLIENT_SECRET"
+				},
+				"login": {
+					"loginParameters": ["resource=https://graph.microsoft.com"]
 				}
 			}
 		}
+	},
+	"globalHeaders": {
+		"Cache-Control": "no-cache"
 	}
 }

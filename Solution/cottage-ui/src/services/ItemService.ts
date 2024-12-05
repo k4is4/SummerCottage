@@ -4,56 +4,56 @@ import apiClient from './apiClient';
 import ItemFormData from '../types/itemFormData';
 import { ProblemDetails } from '../types/problemDetails';
 
-import {
-	PublicClientApplication,
-	InteractionRequiredAuthError,
-} from '@azure/msal-browser'; // MSAL import for token management
-import { msalConfig, loginRequest } from '../msalConfig'; // Import your msalConfig
+// import {
+// 	PublicClientApplication,
+// 	InteractionRequiredAuthError,
+// } from '@azure/msal-browser'; // MSAL import for token management
+// import { msalConfig, loginRequest } from '../msalConfig'; // Import your msalConfig
 
-const msalInstance = new PublicClientApplication(msalConfig);
+// const msalInstance = new PublicClientApplication(msalConfig);
 
 class ItemService {
-	private async getAccessToken(): Promise<string> {
-		try {
-			const accounts = msalInstance.getAllAccounts();
-			if (accounts.length === 0) {
-				throw new Error('No accounts.');
-			}
+	// private async getAccessToken(): Promise<string> {
+	// try {
+	// 		const accounts = msalInstance.getAllAccounts();
+	// 		if (accounts.length === 0) {
+	// 			throw new Error('No accounts.');
+	// 		}
 
-			// Try to get the token silently (without re-login)
-			const accessTokenResponse = await msalInstance.acquireTokenSilent({
-				...loginRequest,
-				account: accounts[0], // Get the current authenticated user
-			});
+	// 		// Try to get the token silently (without re-login)
+	// 		const accessTokenResponse = await msalInstance.acquireTokenSilent({
+	// 			...loginRequest,
+	// 			account: accounts[0], // Get the current authenticated user
+	// 		});
 
-			return accessTokenResponse.accessToken;
-		} catch (error) {
-			// If token acquisition fails (e.g., token expired), try interactive flow
-			if (error instanceof InteractionRequiredAuthError) {
-				const interactiveResponse = await msalInstance.acquireTokenPopup(
-					loginRequest
-				);
-				return interactiveResponse.accessToken;
-			} else {
-				console.error('Error acquiring token:', error);
-				throw error;
-			}
-		}
-	}
+	// 		return accessTokenResponse.accessToken;
+	// 	} catch (error) {
+	// 		// If token acquisition fails (e.g., token expired), try interactive flow
+	// 		if (error instanceof InteractionRequiredAuthError) {
+	// 			const interactiveResponse = await msalInstance.acquireTokenPopup(
+	// 				loginRequest
+	// 			);
+	// 			return interactiveResponse.accessToken;
+	// 		} else {
+	// 			console.error('Error acquiring token:', error);
+	// 			throw error;
+	// 		}
+	// 	}
+	// }
 
 	public async getItems(): Promise<Item[]> {
 		const backendUrl = 'https://app-cottage.azurewebsites.net/api';
-		const token = await this.getAccessToken();
+		// const token = await this.getAccessToken();
 
 		try {
 			// Make the API request with the token in the Authorization header
 			const response: AxiosResponse<Item[]> = await axios.get(
-				`${backendUrl}/items`,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-					},
-				}
+				`${backendUrl}/items`
+				// {
+				// 	headers: {
+				// 		Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+				// 	},
+				// }
 			);
 			return response.data;
 		} catch (error) {

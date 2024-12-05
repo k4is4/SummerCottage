@@ -13,11 +13,23 @@ import { ProblemDetails } from '../types/problemDetails';
 // const msalInstance = new PublicClientApplication(msalConfig);
 
 class ItemService {
-	private async getUserInfo() {
-		const response = await fetch('/.auth/me');
-		const payload = await response.json();
-		const { clientPrincipal } = payload;
-		return clientPrincipal;
+	private async getToken() {
+		const response = await axios.post(
+			`https://login.microsoftonline.com/bf05f699-9934-4606-9238-1a93f805568f/oauth2/v2.0/token`,
+			null,
+			{
+				params: {
+					grant_type: 'client_credentials',
+					client_id: '111726ea-c3c1-4d90-8ec4-f3a2595c3bd0',
+					client_secret: process.env.AZURE_CLIENT_SECRET,
+					scope: 'api://d76453d7-bc8c-425f-9ee9-bdb7d2d071ce/Invoke',
+				},
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+			}
+		);
+		return response.data.access_token;
 	}
 	// private async getAccessToken(): Promise<string> {
 	// try {
@@ -48,19 +60,19 @@ class ItemService {
 	// }
 
 	public async getItems(): Promise<Item[]> {
-		console.log(await this.getUserInfo());
+		let token = await this.getToken();
 		const backendUrl = 'https://app-cottage.azurewebsites.net/api';
 		// const token = await this.getAccessToken();
 
 		try {
 			// Make the API request with the token in the Authorization header
 			const response: AxiosResponse<Item[]> = await axios.get(
-				`${backendUrl}/items`
-				// {
-				// 	headers: {
-				// 		Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-				// 	},
-				// }
+				`${backendUrl}/items`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+					},
+				}
 			);
 			return response.data;
 		} catch (error) {

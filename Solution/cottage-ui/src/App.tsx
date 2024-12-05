@@ -7,9 +7,16 @@ import ItemList from './components/inventory/itemList';
 import Navigation from './components/navigation';
 import CalendarComponent from './components/calendar/calendarComponent';
 
-const App: React.FC = () => {
+import { MsalProvider } from '@azure/msal-react';
+import { PublicClientApplication } from '@azure/msal-browser';
+
+interface AppProps {
+	instance: PublicClientApplication;
+}
+
+const App: React.FC<AppProps> = ({ instance }) => {
 	return (
-		<>
+		<MsalProvider instance={instance}>
 			<Banner></Banner>
 			<div>
 				<Navigation />
@@ -18,7 +25,7 @@ const App: React.FC = () => {
 					<Route path="/calendar" element={<CalendarComponent />} />
 				</Routes>
 			</div>
-		</>
+		</MsalProvider>
 	);
 };
 

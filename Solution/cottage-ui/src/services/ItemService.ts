@@ -3,32 +3,47 @@ import Item from '../types/item';
 import apiClient from './apiClient';
 import ItemFormData from '../types/itemFormData';
 import { ProblemDetails } from '../types/problemDetails';
-import msalInstance from '../msalConfig';
+
+import {
+	PublicClientApplication,
+	InteractionRequiredAuthError,
+} from '@azure/msal-browser'; // MSAL import for token management
+import { msalConfig, loginRequest } from '../msalConfig'; // Import your msalConfig
+
+const msalInstance = new PublicClientApplication(msalConfig);
 
 class ItemService {
 	private async getAccessToken(): Promise<string> {
 		try {
 			const accounts = msalInstance.getAllAccounts();
 			if (accounts.length === 0) {
-				throw new Error('No accounts found. Please log in.');
+				throw new Error('No accounts.');
 			}
 
-			const request = {
-				scopes: ['api://d76453d7-bc8c-425f-9ee9-bdb7d2d071ce/Invoke'], // Replace with your API's scope
-				account: accounts[0], // Use the first account (or let the user pick one)
-			};
+			// Try to get the token silently (without re-login)
+			const accessTokenResponse = await msalInstance.acquireTokenSilent({
+				...loginRequest,
+				account: accounts[0], // Get the current authenticated user
+			});
 
-			const response = await msalInstance.acquireTokenSilent(request);
-			return response.accessToken;
+			return accessTokenResponse.accessToken;
 		} catch (error) {
-			console.error('Error acquiring token silently:', error);
-			throw error;
+			// If token acquisition fails (e.g., token expired), try interactive flow
+			if (error instanceof InteractionRequiredAuthError) {
+				const interactiveResponse = await msalInstance.acquireTokenPopup(
+					loginRequest
+				);
+				return interactiveResponse.accessToken;
+			} else {
+				console.error('Error acquiring token:', error);
+				throw error;
+			}
 		}
 	}
 
 	public async getItems(): Promise<Item[]> {
 		const backendUrl = 'https://app-cottage.azurewebsites.net/api';
-		const accessToken = await this.getAccessToken();
+		const token = await this.getAccessToken();
 
 		try {
 			// Make the API request with the token in the Authorization header
@@ -36,8 +51,7 @@ class ItemService {
 				`${backendUrl}/items`,
 				{
 					headers: {
-						Authorization: `Bearer ${accessToken}`,
-						Accept: 'application/json',
+						Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
 					},
 				}
 			);

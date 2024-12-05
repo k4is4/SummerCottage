@@ -13,6 +13,12 @@ import { ProblemDetails } from '../types/problemDetails';
 // const msalInstance = new PublicClientApplication(msalConfig);
 
 class ItemService {
+	private async getUserInfo() {
+		const response = await fetch('/.auth/me');
+		const payload = await response.json();
+		const { clientPrincipal } = payload;
+		return clientPrincipal;
+	}
 	// private async getAccessToken(): Promise<string> {
 	// try {
 	// 		const accounts = msalInstance.getAllAccounts();
@@ -42,6 +48,7 @@ class ItemService {
 	// }
 
 	public async getItems(): Promise<Item[]> {
+		console.log(await this.getUserInfo());
 		const backendUrl = 'https://app-cottage.azurewebsites.net/api';
 		// const token = await this.getAccessToken();
 

@@ -1,25 +1,85 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useMsal, MsalAuthenticationTemplate } from '@azure/msal-react';
+import { InteractionType } from '@azure/msal-browser';
+import { loginRequest } from './authConfig';
+import { PageLayout } from './components/PageLayout';
+import { APIData } from './components/APIData';
+import Button from 'react-bootstrap/Button';
+import './styles/App.css';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Banner from './components/banner';
-import ItemList from './components/inventory/itemList';
-import Navigation from './components/navigation';
-import CalendarComponent from './components/calendar/calendarComponent';
+/**
+ * Renders name of the signed-in user and a button to retrieve data from an API
+ */
+const AppContent = () => {
+	const { instance, accounts } = useMsal();
+	const [apiData, setApiData] = useState(null);
 
-const App: React.FC = () => {
+	function CallAPI() {
+		// Silently acquires an access token which is then attached to a request for API call
+		instance
+			.acquireTokenSilent({
+				...loginRequest,
+				account: accounts[0],
+			})
+			.then((response) => {
+				console.log(response.accessToken);
+
+				fetch('{Function App API URL}', {
+					method: 'post',
+					headers: new Headers({
+						Authorization: 'Bearer ' + response.accessToken,
+						Accept: 'application/json',
+					}),
+				})
+					.then((data) => data.json())
+					.then((json) => {
+						console.log(json);
+						setApiData(json);
+					});
+			});
+	}
+
 	return (
 		<>
-			<Banner></Banner>
-			<div>
-				<Navigation />
-				<Routes>
-					<Route path="/" element={<ItemList />} />
-					<Route path="/calendar" element={<CalendarComponent />} />
-				</Routes>
-			</div>
+			<h5 className="card-title">Welcome {accounts[0].name}</h5>
+			{apiData ? (
+				<APIData apiData={apiData} />
+			) : (
+				<div>
+					No Data from API. Click Call API!
+					<br />
+					<br />
+				</div>
+			)}
+			<Button variant="secondary" onClick={CallAPI}>
+				Call API
+			</Button>
 		</>
 	);
 };
 
-export default App;
+/**
+ * If a user is authenticated the AppContent component above is rendered. Otherwise the content is not rendered.
+ */
+const MainContent = () => {
+	return (
+		<div className="App">
+			{
+				<MsalAuthenticationTemplate
+					interactionType={InteractionType.Redirect}
+					authenticationRequest={loginRequest}
+				>
+					<AppContent />
+				</MsalAuthenticationTemplate>
+			}
+		</div>
+	);
+};
+
+export default function App() {
+	return (
+		<PageLayout>
+			<MainContent />
+		</PageLayout>
+	);
+}

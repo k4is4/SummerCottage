@@ -74,7 +74,7 @@ class ItemService {
 
 	public async getItems(): Promise<Item[]> {
 		// let token = await this.getAccessToken();
-		const backendUrl = 'https://app-cottage.azurewebsites.net/api';
+		const backendUrl = '/api';
 		// const token = await this.getAccessToken();
 
 		try {

@@ -73,19 +73,19 @@ class ItemService {
 	// }
 
 	public async getItems(): Promise<Item[]> {
-		let token = await this.getAccessToken();
+		// let token = await this.getAccessToken();
 		const backendUrl = 'https://app-cottage.azurewebsites.net/api';
 		// const token = await this.getAccessToken();
 
 		try {
 			// Make the API request with the token in the Authorization header
 			const response: AxiosResponse<Item[]> = await axios.get(
-				`${backendUrl}/items`,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-					},
-				}
+				`${backendUrl}/items`
+				// {
+				// 	headers: {
+				// 		Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+				// 	},
+				// }
 			);
 			return response.data;
 		} catch (error) {

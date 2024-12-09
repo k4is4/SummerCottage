@@ -14,6 +14,7 @@ import { ProblemDetails } from '../types/problemDetails';
 
 class ItemService {
 	private async getToken() {
+		console.log('printing out test setting');
 		console.log(process.env.REACT_APP_SETTING);
 		const response = await axios.post(
 			`https://login.microsoftonline.com/bf05f699-9934-4606-9238-1a93f805568f/oauth2/v2.0/token`,

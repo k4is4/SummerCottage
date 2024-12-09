@@ -14,8 +14,6 @@ import { ProblemDetails } from '../types/problemDetails';
 
 class ItemService {
 	private async getToken() {
-		console.log('printing out test setting');
-		console.log(process.env.REACT_APP_SETTING);
 		const response = await axios.post(
 			`https://login.microsoftonline.com/bf05f699-9934-4606-9238-1a93f805568f/oauth2/v2.0/token`,
 			null,
@@ -23,7 +21,7 @@ class ItemService {
 				params: {
 					grant_type: 'client_credentials',
 					client_id: '111726ea-c3c1-4d90-8ec4-f3a2595c3bd0',
-					client_secret: process.env.AZURE_CLIENT_SECRET,
+					client_secret: process.env.REACT_APP_AZURE_CLIENT_SECRET,
 					scope: 'api://d76453d7-bc8c-425f-9ee9-bdb7d2d071ce/Invoke',
 				},
 				headers: {

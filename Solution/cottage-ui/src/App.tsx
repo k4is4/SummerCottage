@@ -28,7 +28,6 @@ const AppContent = () => {
 					method: 'get',
 					headers: new Headers({
 						Authorization: 'Bearer ' + response.accessToken,
-						Accept: 'application/json',
 					}),
 				})
 					.then((data) => data.json())

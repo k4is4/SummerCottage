@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMsal, MsalAuthenticationTemplate } from '@azure/msal-react';
 import { InteractionType } from '@azure/msal-browser';
-import { loginRequest } from './authConfig';
+// import { loginRequest } from './authConfig';
 import { PageLayout } from './components/PageLayout';
 import { APIData } from './components/APIData';
 import Button from 'react-bootstrap/Button';
@@ -18,7 +18,7 @@ const AppContent = () => {
 		// Silently acquires an access token which is then attached to a request for API call
 		instance
 			.acquireTokenSilent({
-				...loginRequest,
+				scopes: ['api://d76453d7-bc8c-425f-9ee9-bdb7d2d071ce/Invoke'],
 				account: accounts[0],
 			})
 			.then((response) => {
@@ -66,7 +66,7 @@ const MainContent = () => {
 			{
 				<MsalAuthenticationTemplate
 					interactionType={InteractionType.Redirect}
-					authenticationRequest={loginRequest}
+					// authenticationRequest={loginRequest}
 				>
 					<AppContent />
 				</MsalAuthenticationTemplate>

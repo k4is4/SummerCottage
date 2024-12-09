@@ -53,6 +53,6 @@ export const msalConfig = {
  * For more information about OIDC scopes, visit:
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
-export const loginRequest = {
-	scopes: ['api://d76453d7-bc8c-425f-9ee9-bdb7d2d071ce/Invoke'],
-};
+// export const loginRequest = {
+// 	scopes: ['api://d76453d7-bc8c-425f-9ee9-bdb7d2d071ce/Invoke'],
+// };

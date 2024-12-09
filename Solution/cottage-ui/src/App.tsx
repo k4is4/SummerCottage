@@ -24,8 +24,8 @@ const AppContent = () => {
 			.then((response) => {
 				console.log(response.accessToken);
 
-				fetch('{Function App API URL}', {
-					method: 'post',
+				fetch('https://app-cottage.azurewebsites.net/api/items', {
+					method: 'get',
 					headers: new Headers({
 						Authorization: 'Bearer ' + response.accessToken,
 						Accept: 'application/json',

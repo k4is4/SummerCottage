@@ -13,6 +13,18 @@ import { ProblemDetails } from '../types/problemDetails';
 // const msalInstance = new PublicClientApplication(msalConfig);
 
 class ItemService {
+	private async getAccessToken() {
+		const response = await fetch('/.auth/me');
+		if (!response.ok) {
+			throw new Error('Failed to fetch authentication details');
+		}
+		const authData = await response.json();
+
+		// Extract the token for your backend API
+		const token = authData.clientPrincipal.accessToken;
+		return token;
+	}
+
 	private async getToken() {
 		console.log(process.env.REACT_APP_AZURE_CLIENT_SECRET?.length);
 		const response = await axios.post(
@@ -61,7 +73,7 @@ class ItemService {
 	// }
 
 	public async getItems(): Promise<Item[]> {
-		let token = await this.getToken();
+		let token = await this.getAccessToken();
 		const backendUrl = 'https://app-cottage.azurewebsites.net/api';
 		// const token = await this.getAccessToken();
 

@@ -26,9 +26,9 @@ const AppContent = () => {
 
 				fetch('https://app-kaisa-backend.azurewebsites.net/', {
 					method: 'get',
-					headers: new Headers({
-						Authorization: 'Bearer ' + response.accessToken,
-					}),
+					// headers: new Headers({
+					// 	Authorization: 'Bearer ' + response.accessToken,
+					// }),
 				})
 					.then((data) => data.json())
 					.then((json) => {

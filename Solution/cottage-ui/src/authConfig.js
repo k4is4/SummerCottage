@@ -12,10 +12,10 @@ import { LogLevel } from '@azure/msal-browser';
  */
 export const msalConfig = {
 	auth: {
-		clientId: '111726ea-c3c1-4d90-8ec4-f3a2595c3bd0',
+		clientId: '4892989d-1ed0-432d-b6b9-a81cdff8c9c8',
 		authority:
 			'https://login.microsoftonline.com/bf05f699-9934-4606-9238-1a93f805568f', // This is a URL (e.g. https://login.microsoftonline.com/{your tenant ID})
-		redirectUri: 'https://icy-pond-0f1e60f03.4.azurestaticapps.net',
+		redirectUri: 'localhost:3000',
 	},
 	cache: {
 		cacheLocation: 'sessionStorage', // This configures where your cache will be stored

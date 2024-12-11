@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useMsal, MsalAuthenticationTemplate } from '@azure/msal-react';
+import { MsalAuthenticationTemplate } from '@azure/msal-react';
 import { InteractionType } from '@azure/msal-browser';
 // import { loginRequest } from './authConfig';
 import { PageLayout } from './components/PageLayout';
@@ -11,7 +11,7 @@ import './styles/App.css';
  * Renders name of the signed-in user and a button to retrieve data from an API
  */
 const AppContent = () => {
-	const { instance, accounts } = useMsal();
+	// const { instance, accounts } = useMsal();
 	const [apiData, setApiData] = useState(null);
 
 	function CallAPI() {
@@ -40,7 +40,8 @@ const AppContent = () => {
 
 	return (
 		<>
-			<h5 className="card-title">Welcome {accounts[0].name}</h5>
+			{/* <h5 className="card-title">Welcome {accounts[0].name}</h5> */}
+			<h5 className="card-title">Welcome</h5>
 			{apiData ? (
 				<APIData apiData={apiData} />
 			) : (

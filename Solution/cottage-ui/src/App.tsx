@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { MsalAuthenticationTemplate } from '@azure/msal-react';
+import { MsalAuthenticationTemplate, useMsal } from '@azure/msal-react';
 import { InteractionType } from '@azure/msal-browser';
-// import { loginRequest } from './authConfig';
+import { loginRequest } from './authConfig';
 import { PageLayout } from './components/PageLayout';
 import { APIData } from './components/APIData';
 import Button from 'react-bootstrap/Button';
@@ -11,37 +11,36 @@ import './styles/App.css';
  * Renders name of the signed-in user and a button to retrieve data from an API
  */
 const AppContent = () => {
-	// const { instance, accounts } = useMsal();
+	const { instance, accounts } = useMsal();
 	const [apiData, setApiData] = useState(null);
 
 	function CallAPI() {
 		// Silently acquires an access token which is then attached to a request for API call
-		// instance
-		// 	.acquireTokenSilent({
-		// 		...loginRequest,
-		// 		account: accounts[0],
-		// 	})
-		// 	.then((response) => {
-		// 		console.log(response.accessToken);
+		instance
+			.acquireTokenSilent({
+				...loginRequest,
+				account: accounts[0],
+			})
+			.then((response) => {
+				console.log(response.accessToken);
 
-		fetch('https://app-kaisa-backend.azurewebsites.net/', {
-			method: 'get',
-			// headers: new Headers({
-			// 	Authorization: 'Bearer ' + response.accessToken,
-			// }),
-		})
-			.then((data) => data.json())
-			.then((json) => {
-				console.log(json);
-				setApiData(json);
+				fetch('https://app-kaisa-backend.azurewebsites.net/', {
+					method: 'get',
+					headers: new Headers({
+						Authorization: 'Bearer ' + response.accessToken,
+					}),
+				})
+					.then((data) => data.json())
+					.then((json) => {
+						console.log(json);
+						setApiData(json);
+					});
 			});
-		// });
 	}
 
 	return (
 		<>
-			{/* <h5 className="card-title">Welcome {accounts[0].name}</h5> */}
-			<h5 className="card-title">Welcome</h5>
+			<h5 className="card-title">Welcome {accounts[0].name}</h5>
 			{apiData ? (
 				<APIData apiData={apiData} />
 			) : (

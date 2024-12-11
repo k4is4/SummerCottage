@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMsal, MsalAuthenticationTemplate } from '@azure/msal-react';
 import { InteractionType } from '@azure/msal-browser';
-import { loginRequest } from './authConfig';
+// import { loginRequest } from './authConfig';
 import { PageLayout } from './components/PageLayout';
 import { APIData } from './components/APIData';
 import Button from 'react-bootstrap/Button';
@@ -16,26 +16,26 @@ const AppContent = () => {
 
 	function CallAPI() {
 		// Silently acquires an access token which is then attached to a request for API call
-		instance
-			.acquireTokenSilent({
-				...loginRequest,
-				account: accounts[0],
-			})
-			.then((response) => {
-				console.log(response.accessToken);
+		// instance
+		// 	.acquireTokenSilent({
+		// 		...loginRequest,
+		// 		account: accounts[0],
+		// 	})
+		// 	.then((response) => {
+		// 		console.log(response.accessToken);
 
-				fetch('https://app-kaisa-backend.azurewebsites.net/', {
-					method: 'get',
-					headers: new Headers({
-						Authorization: 'Bearer ' + response.accessToken,
-					}),
-				})
-					.then((data) => data.json())
-					.then((json) => {
-						console.log(json);
-						setApiData(json);
-					});
+		fetch('https://app-kaisa-backend.azurewebsites.net/', {
+			method: 'get',
+			// headers: new Headers({
+			// 	Authorization: 'Bearer ' + response.accessToken,
+			// }),
+		})
+			.then((data) => data.json())
+			.then((json) => {
+				console.log(json);
+				setApiData(json);
 			});
+		// });
 	}
 
 	return (
@@ -66,7 +66,7 @@ const MainContent = () => {
 			{
 				<MsalAuthenticationTemplate
 					interactionType={InteractionType.Redirect}
-					authenticationRequest={loginRequest}
+					// authenticationRequest={loginRequest}
 				>
 					<AppContent />
 				</MsalAuthenticationTemplate>
